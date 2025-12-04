@@ -9,6 +9,12 @@ public class CollisionChecker {
         this.gp = gp;
     }
 
+    private boolean isTileColliding(int[][] map, int col, int row) {
+        int tileNum = map[col][row];
+        return gp.tileM.tile[tileNum].collision;
+    }
+
+
     public void checkTile(Entity entity) {
         int entityLeftWorldX = entity.worldX + entity.solidArea.x;
         int entityRightWorldX = entity.worldX + entity.solidArea.x + entity.solidArea.width;
@@ -20,38 +26,58 @@ public class CollisionChecker {
         int entityTopRow = entityTopWorldY/gp.tileSize;
         int entityBottomRow = entityBottomWorldY/gp.tileSize;
 
-        int tileNum1, tileNum2;
-
         switch (entity.direction) {
             case "up" -> {
                 entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
-                tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
-                tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
-                if(gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+
+                boolean collidingBackground =
+                        isTileColliding(gp.tileM.mapTileNumBackground, entityLeftCol, entityTopRow) ||
+                        isTileColliding(gp.tileM.mapTileNumBackground, entityRightCol, entityTopRow);
+                boolean collidingEnvironment =
+                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityLeftCol, entityTopRow) ||
+                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityRightCol, entityTopRow);
+
+                if(collidingBackground || collidingEnvironment) {
                     entity.collisionOn = true;
                 }
             }
             case "left" -> {
                 entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;
-                tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
-                tileNum2 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
-                if(gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+
+                boolean collidingBackground =
+                        isTileColliding(gp.tileM.mapTileNumBackground, entityLeftCol, entityTopRow) ||
+                        isTileColliding(gp.tileM.mapTileNumBackground, entityLeftCol, entityBottomRow);
+                boolean collidingEnvironment =
+                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityLeftCol, entityTopRow) ||
+                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityLeftCol, entityBottomRow);
+
+                if(collidingBackground || collidingEnvironment) {
                     entity.collisionOn = true;
                 }
             }
             case "down" -> {
                 entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
-                tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
-                tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
-                if(gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+
+                boolean collidingBackground =
+                        isTileColliding(gp.tileM.mapTileNumBackground, entityLeftCol, entityBottomRow) ||
+                        isTileColliding(gp.tileM.mapTileNumBackground, entityRightCol, entityBottomRow);
+                boolean collidingEnvironment =
+                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityLeftCol, entityBottomRow) ||
+                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityRightCol, entityBottomRow);
+                if(collidingBackground || collidingEnvironment) {
                     entity.collisionOn = true;
                 }
             }
             case "right" -> {
                 entityRightCol = (entityRightWorldX + entity.speed) / gp.tileSize;
-                tileNum1 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
-                tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
-                if(gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+
+                boolean collidingBackground =
+                        isTileColliding(gp.tileM.mapTileNumBackground, entityRightCol, entityTopRow) ||
+                        isTileColliding(gp.tileM.mapTileNumBackground, entityRightCol, entityBottomRow);
+                boolean collidingEnvironment =
+                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityRightCol, entityTopRow) ||
+                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityRightCol, entityBottomRow);
+                if(collidingBackground || collidingEnvironment) {
                     entity.collisionOn = true;
                 }
             }
