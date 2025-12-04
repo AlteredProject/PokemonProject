@@ -8,6 +8,13 @@ import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable{
 
+    // === DEBUG ===
+    private int warmupFrames = 30;
+    private long highestDrawTime = 0;
+    private long totalDrawTime = 0;
+    private long drawCount = 0;
+    private int frameSincePrint = 0;
+
     // === SCREEN SETTINGS ===
     final int originalTileSize = 16;    // 16x16 px
     public final int ScaleMultiplier = 4;
@@ -25,19 +32,21 @@ public class GamePanel extends JPanel implements Runnable{
     public CollisionChecker cChecker = new CollisionChecker(this);
     public Player player = new Player(this,keyH);
 
+
     // === WORLD SETTINGS ===
-    public final int maxWorldCol = 50;
-    public final int maxWorldRow = 50;
+    public final int maxWorldCol = 100;
+    public final int maxWorldRow = 100;
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow;
 
     // === FPS ===
     int FPS = 60;
 
+
     // === CONSTRUCTOR ===
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(Color.black);
+        this.setBackground(new java.awt.Color(120,192,248));
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
@@ -51,9 +60,11 @@ public class GamePanel extends JPanel implements Runnable{
     // === GAME LOOP ===
     @Override
     public void run() {
-        double drawInterval = 1000000000.0 / FPS;
+        double drawInterval = 1_000_000_000.0 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
+        long timer = System.currentTimeMillis();
+        int drawCount = 0;
 
         while(gameThread != null)  {
             long currentTime = System.nanoTime();
@@ -63,10 +74,18 @@ public class GamePanel extends JPanel implements Runnable{
             while(delta >= 1) {
                 update();
                 delta--;
+                drawCount++;
+                repaint();
             }
-            repaint();
+
+            if (System.currentTimeMillis() - timer >= 1000) {
+                System.out.println("FPS: " + drawCount);
+                drawCount = 0;
+                timer += 1000;
+            }
         }
     }
+
 
     public void update() {
         player.update();
@@ -76,11 +95,49 @@ public class GamePanel extends JPanel implements Runnable{
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D)g;
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
-        tileM.draw(g2);
 
+        // DEBUG
+        long drawStart = System.nanoTime();
+
+        tileM.drawLayer(g2, tileM.mapTileNumBackground);
         player.draw(g2);
+        tileM.drawLayer(g2, tileM.mapTileNumEnvironment);
+
+        // DEBUG
+        long passedTime = System.nanoTime() - drawStart;
+
+        double passedMs = passedTime / 1_000_000.0;
+
+        if (warmupFrames > 0) {
+            warmupFrames--;
+        } else {
+            // TRACK AVG & MAX
+            if (passedTime > highestDrawTime) {
+                highestDrawTime = passedTime;
+            }
+
+            totalDrawTime += passedTime;
+            drawCount++;
+
+            double averageMs = (totalDrawTime / (double) drawCount) / 1_000_000.0;
+            double highestMs = highestDrawTime / 1_000_000.0;
+
+            frameSincePrint++;
+            int printInterval = 15;
+            if (frameSincePrint >= printInterval) {
+                System.out.printf(
+                        "Draw: %.3f ms | Highest: %.3f ms | Average: %.3f ms%n",
+                        passedMs, highestMs, averageMs
+                );
+                frameSincePrint = 0;
+            }
+        }
 
         g2.dispose();
+
     }
 }
