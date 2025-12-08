@@ -111,10 +111,8 @@ public class TileManager {
             setup(63, "Environment/(63) Rock-TopLeft", true);
             setup(64, "Environment/(64) Rock-TopRight", true);
             setup(70, "Environment/(70) Bikestand", true);
-            setup(71, "Environment/(71) PokeBall", true);
             setup(72, "Environment/(72) Rock-BottomLeft", true);
             setup(73, "Environment/(73) Rock-BottomRight", true);
-            setup(80, "Environment/(80) Rock-Smash", true);
     }
 
     public void setup(int index, String imagePath, boolean collision) {
