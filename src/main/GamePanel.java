@@ -1,6 +1,7 @@
 package main;
 
 import entity.Player;
+import object.SuperObject;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -26,22 +27,25 @@ public class GamePanel extends JPanel implements Runnable{
     public final int screenWidth = tileSize * maxScreenCol;     // 1024 px
     public final int screenHeight = tileSize * maxScreenRow;    // 768 px
 
+    // === SYSTEM ===
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
-    Thread gameThread;
+    Sound music = new Sound();
+    Sound sfx = new Sound();
     public CollisionChecker cChecker = new CollisionChecker(this);
-    public Player player = new Player(this,keyH);
+    public AssetSetter aSetter = new AssetSetter(this);
+    Thread gameThread;
 
+    // == ENTITY & PLAYER ===
+    public Player player = new Player(this,keyH);
+    public SuperObject[] obj = new SuperObject[10];
 
     // === WORLD SETTINGS ===
     public final int maxWorldCol = 100;
     public final int maxWorldRow = 100;
-    public final int worldWidth = tileSize * maxWorldCol;
-    public final int worldHeight = tileSize * maxWorldRow;
 
     // === FPS ===
     int FPS = 60;
-
 
     // === CONSTRUCTOR ===
     public GamePanel() {
@@ -52,10 +56,17 @@ public class GamePanel extends JPanel implements Runnable{
         this.setFocusable(true);
     }
 
+    public void setupGame() {
+        aSetter.setObject();
+        playMusic(0);
+    }
+
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
     }
+
+
 
     // === GAME LOOP ===
     @Override
@@ -104,6 +115,11 @@ public class GamePanel extends JPanel implements Runnable{
         long drawStart = System.nanoTime();
 
         tileM.drawLayer(g2, tileM.mapTileNumBackground);
+        for(int i = 0; i < obj.length; i++) {
+            if(obj[i] != null) {
+                obj[i].draw(g2, this);
+            }
+        }
         player.draw(g2);
         tileM.drawLayer(g2, tileM.mapTileNumEnvironment);
 
@@ -139,5 +155,20 @@ public class GamePanel extends JPanel implements Runnable{
 
         g2.dispose();
 
+    }
+
+    public void playMusic(int i) {
+        music.setFile(i);
+        music.play();
+        music.loop();
+    }
+
+    public void stopMusic() {
+        music.stop();
+    }
+
+    public void playSFX(int i) {
+        sfx.setFile(i);
+        sfx.play();
     }
 }
