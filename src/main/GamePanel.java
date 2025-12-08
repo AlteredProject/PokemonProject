@@ -160,17 +160,10 @@ public class GamePanel extends JPanel implements Runnable {
                 frameSincePrint = 0;
             }
         }
-
-            if (leftClick.clicked && leftClick.mousePressed2(40, 696, 44, 58)) {
+        botton.drawpokedexIcon(g2);
+            if (keyH.pokedexPressed||leftClick.clicked && leftClick.mousePressed2(40, 696, 44, 58)) {
                 pokedex.draw(g2);
             }
-
-        if (keyH.pokedexPressed) {
-            pokedex.draw(g2);
-        } else if (!keyH.pokedexPressed) {
-            botton.drawpokedexIcon(g2);
-        }
-
         g2.dispose();
     }
 
