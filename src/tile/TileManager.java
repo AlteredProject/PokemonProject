@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Set;
 
 public class TileManager {
     GamePanel gp;
@@ -29,90 +30,25 @@ public class TileManager {
     }
 
     public void getTileImage() {
+        Set<Integer> collisionTiles = Set.of(
+          12, 45, 46, 47, 48, 50, 52, 53, 54, 55, 56, 57, 58, 59, 60, 62, 63, 64, 65, 68,
+          69, 72, 73, 74, 77, 78, 81, 82, 83, 90, 92, 93, 94, 95, 96, 97, 98, 99, 101, 102,
+          103, 104, 105, 106, 107, 108, 109, 110, 113, 115, 116, 126, 127, 128, 129, 130, 131,
+          132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148,
+          149, 150, 151, 152, 153, 154, 156, 157, 158, 160, 161, 171, 172, 173, 174, 175, 176,
+          177, 178, 179, 180, 188, 189, 197, 198, 202, 206, 207, 208, 209, 210, 212, 213, 214,
+          215, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 241, 242, 243, 250, 251,
+          252, 254, 257, 258, 259, 260, 261, 262, 264, 265, 270, 273, 274, 275, 276, 277, 278,
+          284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 301, 302, 304,
+          305, 306, 310, 311, 312, 313, 314, 315, 316, 319, 320, 321, 322, 323, 324, 326, 327,
+          328, 329, 330, 331, 332
+        );
 
-            // ========== BACKGROUND ==========
-            setup(0, "Background/(00) Blank", false);
-            setup(1, "Background/(01) Grass", false);
-            setup(2, "Background/(02) TallGrass", false);
-            setup(3, "Background/(03) TallGrass-Dirt", false);
-            setup(4, "Background/(04) Flowers-White", false);
-            setup(5, "Background/(05) Flowers-Colored", false);
-            setup(6, "Background/(06) DirtPath-TopLeft", false);
-            setup(7, "Background/(07) DirtPath-TopMiddle", false);
-            setup(8, "Background/(08) DirtPath-TopRight", false);
-            setup(9, "Background/(09) MudPath-TopLeft", false);
-            setup(10, "Background/(10) MudPath-TopMiddle", false);
-            setup(11, "Background/(11) MudPath-TopRight", false);
-            setup(13, "Background/(13) DirtPath-CornerBottomRight", false);
-            setup(14, "Background/(14) DirtPath-CornerBottomLeft", false);
-            setup(15, "Background/(15) DirtPath-MiddleLeft", false);
-            setup(16, "Background/(16) DirtPath-Center", false);
-            setup(17, "Background/(17) DirtPath-MiddleRight", false);
-            setup(18, "Background/(18) MudPath-MiddleLeft", false);
-            setup(19, "Background/(19) MudPath-Center", false);
-            setup(20, "Background/(20) MudPath-MiddleRight", false);
-            setup(21, "Background/(21) MudPath-CenterDetail", false);
-            setup(22, "Background/(22) DirtPath-CornerTopRight", false);
-            setup(23, "Background/(23) DirtPath-CornerTopLeft", false);
-            setup(24, "Background/(24) DirtPath-BottomLeft", false);
-            setup(25, "Background/(25) DirtPath-BottomMiddle", false);
-            setup(26, "Background/(26) DirtPath-BottomRight", false);
-            setup(27, "Background/(27) MudPath-BottomLeft", false);
-            setup(28, "Background/(28) MudPath-BottomMiddle", false);
-            setup(29, "Background/(29) MudPath-BottomRight", false);
-            setup(30, "Background/(30) MudPath-CornerBottomRight", false);
-            setup(31, "Background/(31) MudPath-CornerBottomLeft", false);
-            setup(32, "Background/(32) TransitionUp-TopLeft", false);
-            setup(33, "Background/(33) TransitionUp-TopRight", false);
-            setup(34, "Background/(34) TransitionDown-TopLeft", false);
-            setup(35, "Background/(35) TransitionDown-TopRight", false);
-            setup(39, "Background/(39) MudPath-CornerTopRight", false);
-            setup(40, "Background/(40) MudPath-CornerTopLeft", false);
-            setup(41, "Background/(41) TransitionUp-BottomLeft", false);
-            setup(42, "Background/(42) TransitionUp-BottomRight", false);
-            setup(43, "Background/(43) TransitionDown-BottomLeft", false);
-            setup(44, "Background/(44) TransitionDown-BottomRight", false);
-            setup(65, "Background/(65) Water-InnerTopLeft", true);
-            setup(66, "Background/(66) Water-Top", true);
-            setup(67, "Background/(67) Water-InnerTopRight", true);
-            setup(68, "Background/(68) Water-OuterTopLeft", true);
-            setup(69, "Background/(69) Water-OuterTopRight", true);
-            setup(74, "Background/(74) Water-Left", true);
-            setup(76, "Background/(76) Water-Right", true);
-            setup(77, "Background/(77) Water-OuterBottomLeft", true);
-            setup(78, "Background/(78) Water-OuterBottomRight", true);
-            setup(83, "Background/(83) Water-InnerBottomLeft", true);
-            setup(84, "Background/(84) Water-Bottom", true);
-            setup(85, "Background/(85) Water-InnerBottomRight", true);
-
-            // ========== ENVIRONMENT ==========
-            setup(12, "Environment/(12) Sign", true);
-            setup(36, "Environment/(36) Tree-TopLeft", false);
-            setup(37, "Environment/(37) Tree-TopMiddle", false);
-            setup(38, "Environment/(38) Tree-TopRight", false);
-            setup(45, "Environment/(45) Tree-MiddleLeft", true);
-            setup(46, "Environment/(46) Tree-Center", true);
-            setup(47, "Environment/(47) Tree-MiddleRight", true);
-            setup(48, "Environment/(48) TreeConnector-VerticalLeft", true);
-            setup(49, "Environment/(49) TreeConnector-VerticalMiddle", false);
-            setup(50, "Environment/(50) TreeConnector-VerticalRight", true);
-            setup(51, "Environment/(51) TreeConnector-HorizontalTop", false);
-            setup(52, "Environment/(52) TreeConnector-BottomRight", true);
-            setup(53, "Environment/(53) TreeConnector-BottomLeft", true);
-            setup(54, "Environment/(54) Tree-BottomLeft", true);
-            setup(55, "Environment/(55) Tree-BottomMiddle", true);
-            setup(56, "Environment/(56) Tree-BottomRight", true);
-            setup(57, "Environment/(57) TreeConnector-HorizontalMiddle", true);
-            setup(58, "Environment/(58) TreeConnector-HorizontalBottom", true);
-            setup(59, "Environment/(59) TreeConnector-TopLeft", true);
-            setup(60, "Environment/(60) TreeConnector-TopRight", true);
-            setup(61, "Environment/(61) TreeConnector-Center", false);
-            setup(62, "Environment/(62) Rock-Small", true);
-            setup(63, "Environment/(63) Rock-TopLeft", true);
-            setup(64, "Environment/(64) Rock-TopRight", true);
-            setup(70, "Environment/(70) Bikestand", true);
-            setup(72, "Environment/(72) Rock-BottomLeft", true);
-            setup(73, "Environment/(73) Rock-BottomRight", true);
+        for (int i = 0; i <= 332; i++) {
+            String fileName = String.format("tile%03d", i);
+            boolean hasCollision = collisionTiles.contains(i);
+            setup(i, fileName, hasCollision);
+        }
     }
 
     public void setup(int index, String imagePath, boolean collision) {
