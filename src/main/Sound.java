@@ -1,14 +1,41 @@
 package main;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import java.net.URL;
 
 public class Sound {
 
     Clip clip;
-    URL soundURL[] = new URL[30];
+    URL[] soundURL = new URL[30];
 
     public Sound() {
-        soundURL[0] = getClass().getResource("/sound/");
+        soundURL[0] = getClass().getResource("/sound/Route201.wav");
+    }
+
+    public void setFile(int i) {
+        try {
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
+            clip = AudioSystem.getClip();
+            clip.open(ais);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void play() {
+        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(-10.0f);
+        clip.start();
+    }
+
+    public void loop() {
+        clip.loop(Clip.LOOP_CONTINUOUSLY);
+    }
+
+    public void stop() {
+        clip.stop();
     }
 }
