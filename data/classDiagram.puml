@@ -1,0 +1,312 @@
+@startuml
+!pragma layout smetana
+
+class Main{
+        + JFrame window
+        + GamePanel gamePanel
+    }
+package guiBuilder {
+    class CollisionChecker{
+        + CollisionChecker (GamePanel gp)
+        - boolean isTileColliding(int[][] map, int col, int row)
+        + void checkTile(Entity entity)
+    }
+    class GamePanel{
+        + final int originalTileSize
+        + final int scaleMultiplier
+        + final int tileSize
+        + final int maxScreenCol
+        + final int maxScreenRow
+        + final int screenWidth
+        + final int screenHeight
+        + TileManager tileM
+        + KeyHandler keyH
+        + CollisionChecker cChecker
+        + Player player
+        + final int maxWorldCol
+        + final int maxWorldRow
+        + final int worldWidth
+        + final int worldHeight
+        + GamePanel()
+        + void startGameThread()
+        + void run()
+        + void update()
+        + void paintComponent(Graphics g)
+    }
+    class KeyHandler{
+        + boolean upPressed, leftPressed, downPressed, rightPressed, shiftPressed
+        + void keyTyped(KeyEvent e)
+        + void keyPressed(KeyEvent e)
+        + void keyReleased(KeyEvent e)
+    }
+
+    class Sound{
+        - Clip clip
+        - URL[] soundURL
+        + Sound()
+    }
+
+}
+package entity {
+    class Entity{
+        + int worldX
+        + int worldY
+        + int speed
+        + BufferedImage up1, up2, up3, up4, left1, left2, left3, left4, down1, down2, down3, down4, right1, right2, right3, right4
+        + String direction
+        + int spriteCounter
+        + int spriteNum
+        + Rectangle solidArea
+        + boolean collisionOn
+
+}
+    class Player extends Entity{
+        + final int screenX
+        + final int screenY
+        - int standCounter
+        - boolean moving
+        - boolean sprinting
+        - int pixelCounter
+        - final int originalPlayerSize
+        + final int playerSize
+
+        +Player(GamePanel gp, KeyHandler keyH)
+        + void setDefaultValues()
+        + void getPlayerImage()
+        + void update()
+        + void draw(Graphics2D g2)
+
+}
+}
+package tile {
+    class Tile{
+        + BufferedImage image
+        +  boolean collision
+    }
+    class TileManager{
+        + Tile[] tile
+        + int[][] mapTileNumBackground
+        + int [][] mapTileNumEnvironment
+        +TileManager (GamePanel gp)
+        + void getTileImage()
+        + void setup(int index, String imagePath, boolean collision)
+        + void loadMap(String filePath, int[][] mapArray)
+        + void drawLayer(Graphics2D g2, int[][] map)
+
+    }
+}
+package resource{
+    package maps {
+        note "mapBackground.csv" as N1
+        note "mapEnvironment.csv" as N2
+    }
+    package player{
+        note "All player sprites" as N1
+    }
+    package tiles{
+        package background{
+            note "All background sprites" as N1
+        }
+        package environment{
+            note "All environment sprites" as N1
+        }
+    }
+}
+
+package util{
+    class UtilityTool{
+        + BufferedImage scaleImage(BufferedImage original, int width, int height)
+    }
+}
+
+
+
+class StartMenu{
+    + void menu()
+}
+class LoadGame{
++ Collection<SaveGame>
+}
+class NewGame{
++ User user
+}
+class User{
+    - int id
+    - String playerName
+    - int age
+    - boolean gender
+    - int balance
+    - int badges
+    + void User()
+}
+package pokedex{
+    class Pokedex{
+
+    }
+    package pokemonInfo{
+    class Pokemon{
+    + public String name
+    + int id
+    + int height
+    + int weight
+    + TypeEntry[] types
+    + Sprites sprites
+    + EntryStats[] stats
+    + boolean validPokemon = true
+    + void pokedexEntry()
+    + printInfo()
+    + void printAligned()
+        }
+    class EntryStats{
+        + int base_stat
+        StatInfo stat
+        }
+    class StatInfo{
+            + String name
+            + String url
+        }
+    class TypeInfo{
+                + String name
+        }
+        class Sprites {
+                + String front_default
+            }
+            class TypeEntry{
+                    + TypeInfo
+                    + int slot
+                }
+    }
+
+
+    package pokemondescription{
+    class PokemonDescription{
+            + void static String getDescription(String name)
+
+        }
+        class PokemonSpecies{
+                + FlavourTextEntry[] flavour_text_entries
+                + int capture_rate
+                }
+            class Language{
+                + String name
+            }
+            class CaptureRate{
+                + int capture_rate
+            }
+            class FlavourTextEntry{
+                    + String flavour_text_entries;
+                    + Language language
+                }
+    }
+
+}
+package interaction{
+class BattleSystem{
+ "Implemented if time"
+}
+class Shop{
+    - Potion potion
+    - Pokeball pokeball
+}
+class NPC{
+
+}
+
+class Wild{
+"Implemented if time"
+}
+class Pokecenter{
+    - int heal
+    + void healingService()
+}
+}
+package pauseMenu{
+    class PauseMenu{
+
+    }
+   class PlayerStats{
+        - int id
+        - String playerName
+        - int age
+        - boolean gender
+        - int balance
+        - int badges
+        - int timePlayed
+        - int PokemonsSeen
+
+   }
+   class Bag{
+        - Collection<Pokeballs> pokeballs
+        - Collection<Potions> potions
+   }
+
+   class SaveGame{
+
+   }
+   class PokemonParty{
+       - Collection<Pokemon> pokemonParty
+   }
+}
+class World{
+
+}
+
+package tools{
+    class Pokeball{
+       - int chanceOfCatch
+       + void pokeball()
+       + void ultraPokeball()
+
+    }
+    class Potion{
+       - int heal
+       + void potion()
+       + void hyperPotion()
+    }
+}
+Main *---- GamePanel
+GamePanel *-- KeyHandler
+GamePanel *--- TileManager
+GamePanel *-- CollisionChecker
+GamePanel *---- Player
+GamePanel *-- Sound
+TileManager *------ UtilityTool
+TileManager *---- Tile
+TileManager *---- tiles
+TileManager *---- maps
+Player *---- player
+
+Main *-- StartMenu
+StartMenu *-- User
+StartMenu *-- World
+StartMenu *-- NewGame
+StartMenu *-- LoadGame
+LoadGame *-- SaveGame
+World *-- Wild
+World *-- Pokecenter
+World *-- Shop
+World *-- BattleSystem
+World *-- NPC
+User *--- PauseMenu
+User *---- Pokedex
+PauseMenu *-- Bag
+PauseMenu *-- PlayerStats
+PauseMenu *-- SaveGame
+PauseMenu *-- PokemonParty
+Bag *-- Pokeball
+Bag *-- Potion
+Pokedex *-- PokemonDescription
+Pokedex *-- Pokemon
+PokemonDescription -- Language
+PokemonDescription -- CaptureRate
+PokemonDescription -- PokemonSpecies
+PokemonDescription -- FlavourTextEntry
+Pokemon -- TypeInfo
+Pokemon -- StatInfo
+Pokemon -- Sprites
+Pokemon -- EntryStats
+Pokemon -- TypeEntry
+Shop *-- Pokeball
+Shop *-- Potion
+User <|---- PlayerStats
+@enduml

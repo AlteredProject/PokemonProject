@@ -2,12 +2,17 @@ package main;
 
 import entity.Player;
 import object.SuperObject;
+import pokedex.InteractiveBotton;
+import pokedex.Pokedex;
 import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
-public class GamePanel extends JPanel implements Runnable{
+import static java.awt.event.MouseEvent.MOUSE_CLICKED;
+
+public class GamePanel extends JPanel implements Runnable {
 
     // === DEBUG ===
     private int warmupFrames = 30;
@@ -30,6 +35,7 @@ public class GamePanel extends JPanel implements Runnable{
     // === SYSTEM ===
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
+    ClickHandler leftClick = new ClickHandler();
     Sound music = new Sound();
     Sound sfx = new Sound();
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -37,7 +43,9 @@ public class GamePanel extends JPanel implements Runnable{
     Thread gameThread;
 
     // == ENTITY & PLAYER ===
-    public Player player = new Player(this,keyH);
+    public Player player = new Player(this, keyH);
+    public Pokedex pokedex = new Pokedex(this, keyH);
+    public InteractiveBotton botton = new InteractiveBotton(this, keyH, leftClick);
     public SuperObject[] obj = new SuperObject[10];
 
     // === WORLD SETTINGS ===
@@ -50,9 +58,10 @@ public class GamePanel extends JPanel implements Runnable{
     // === CONSTRUCTOR ===
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(new java.awt.Color(120,192,248));
+        this.setBackground(new java.awt.Color(120, 192, 248));
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
+        this.addMouseListener(leftClick);
         this.setFocusable(true);
     }
 
@@ -67,7 +76,6 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
 
-
     // === GAME LOOP ===
     @Override
     public void run() {
@@ -77,12 +85,12 @@ public class GamePanel extends JPanel implements Runnable{
         long timer = System.currentTimeMillis();
         int drawCount = 0;
 
-        while(gameThread != null)  {
+        while (gameThread != null) {
             long currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
 
-            while(delta >= 1) {
+            while (delta >= 1) {
                 update();
                 delta--;
                 drawCount++;
@@ -105,7 +113,7 @@ public class GamePanel extends JPanel implements Runnable{
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics2D g2 = (Graphics2D)g;
+        Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
         g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -115,8 +123,8 @@ public class GamePanel extends JPanel implements Runnable{
         long drawStart = System.nanoTime();
 
         tileM.drawLayer(g2, tileM.mapTileNumBackground);
-        for(int i = 0; i < obj.length; i++) {
-            if(obj[i] != null) {
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
                 obj[i].draw(g2, this);
             }
         }
@@ -153,8 +161,17 @@ public class GamePanel extends JPanel implements Runnable{
             }
         }
 
-        g2.dispose();
+            if (leftClick.clicked && leftClick.mousePressed2(40, 696, 44, 58)) {
+                pokedex.draw(g2);
+            }
 
+        if (keyH.pokedexPressed) {
+            pokedex.draw(g2);
+        } else if (!keyH.pokedexPressed) {
+            botton.drawpokedexIcon(g2);
+        }
+
+        g2.dispose();
     }
 
     public void playMusic(int i) {

@@ -1,0 +1,36 @@
+@startuml
+'https://plantuml.com/object-diagram
+!pragma layout smetana
+object Main
+object StartMenu
+object User
+object Pokemon
+object Pokedex
+object BattleSystem
+object Shop
+object PauseMenu
+object World
+object PlayerStats
+object Bag
+object SaveGame
+object Wild
+object Pokecenter
+
+Main -- StartMenu
+StartMenu -- World
+World -- Shop
+World -- Pokemon
+World -- Pokecenter
+World -- PauseMenu
+World -- Wild
+World -- User
+World -- BattleSystem
+BattleSystem -- Pokemon
+BattleSystem -- User
+PauseMenu -- Pokedex
+PauseMenu -- PlayerStats
+PauseMenu -- Bag
+PauseMenu -- SaveGame
+Pokedex -- Pokemon
+Pokemon -- Wild
+@enduml

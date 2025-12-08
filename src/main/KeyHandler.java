@@ -2,12 +2,14 @@ package main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 
-public class KeyHandler implements KeyListener {
-    public boolean upPressed, leftPressed, downPressed, rightPressed, shiftPressed;
-
+public class KeyHandler implements KeyListener{
+    public boolean upPressed, leftPressed, downPressed, rightPressed, shiftPressed, pokedexPressed;
+    private int count = 0;
     @Override
     public void keyTyped(KeyEvent e) {
+
     }
 
     @Override
@@ -30,6 +32,15 @@ public class KeyHandler implements KeyListener {
         if(code == KeyEvent.VK_SHIFT) {
             shiftPressed = true;
         }
+        if(code == KeyEvent.VK_P){
+            if(count == 1) {
+                pokedexPressed = false;
+                count = 0;
+            } else {
+                pokedexPressed = true;
+                count++;
+            }
+        }
     }
 
     @Override
@@ -48,7 +59,6 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_D) {
             rightPressed = false;
         }
-
         if (code == KeyEvent.VK_SHIFT) {
             shiftPressed = false;
         }
