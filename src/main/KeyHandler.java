@@ -38,8 +38,15 @@ public class KeyHandler implements KeyListener{
         if(code == KeyEvent.VK_SHIFT) {
             shiftPressed = true;
         }
-        if(code == KeyEvent.VK_P){
+        if(code == KeyEvent.VK_P) {
             gp.switchPokedexStatus();
+        }
+        if(code == KeyEvent.VK_ESCAPE) {
+            if (gp.gameState == gp.playState) {
+                gp.gameState = gp.pauseState;
+            } else if (gp.gameState == gp.pauseState) {
+                gp.gameState = gp.playState;
+            }
         }
     }
 
