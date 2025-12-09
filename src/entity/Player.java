@@ -42,7 +42,7 @@ public class Player extends Entity {
 
     public void setDefaultValues() {
         worldX = (gp.tileSize * 10) + 32;  // WORLD START POS
-        worldY = (gp.tileSize * 4) + 16;  // =o=
+        worldY = (gp.tileSize * 6) + 16;  // =o=
         speed = 3;
         direction = "down";
     }
@@ -158,7 +158,7 @@ public class Player extends Entity {
             case "down" -> image = down[spriteNum - 1];
             case "right" -> image = right[spriteNum - 1];
         }
-        g2.drawImage(image, screenX, screenY, playerSize, playerSize, null);
+        g2.drawImage(image, screenX, screenY-8, playerSize, playerSize, null);
         g2.setColor(Color.red);
         g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
     }
