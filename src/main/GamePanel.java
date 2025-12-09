@@ -120,8 +120,9 @@ public class GamePanel extends JPanel implements Runnable{
                 obj[i].draw(g2, this);
             }
         }
+        tileM.drawLayer(g2, tileM.mapTileNumEnvironmentB);
         player.draw(g2);
-        tileM.drawLayer(g2, tileM.mapTileNumEnvironment);
+        tileM.drawLayer(g2, tileM.mapTileNumEnvironmentF);
 
         // DEBUG
         long passedTime = System.nanoTime() - drawStart;
@@ -143,12 +144,13 @@ public class GamePanel extends JPanel implements Runnable{
             double highestMs = highestDrawTime / 1_000_000.0;
 
             frameSincePrint++;
-            int printInterval = 15;
+            int printInterval = 30;
             if (frameSincePrint >= printInterval) {
                 System.out.printf(
                         "Draw: %.3f ms | Highest: %.3f ms | Average: %.3f ms%n",
                         passedMs, highestMs, averageMs
                 );
+                System.out.println("xPos: " + player.worldX/64 + " yPos: " + player.worldY/64);
                 frameSincePrint = 0;
             }
         }
