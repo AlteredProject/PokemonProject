@@ -3,13 +3,10 @@ package entity;
 import main.GamePanel;
 import main.KeyHandler;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class Player extends Entity {
-    GamePanel gp;
     KeyHandler keyH;
 
     public final int screenX;
@@ -20,19 +17,21 @@ public class Player extends Entity {
     boolean sprinting = false;
     int pixelCounter = 0;
 
-    final int originalPlayerSize = 32;  // 32x32 px
-    public final int playerSize = originalPlayerSize * 4; // 128x128 px
+    int[] spriteOrder = { 1, 2, 1, 3 };
+    int orderIndex = 0;
 
     public Player(GamePanel gp, KeyHandler keyH) {
-        this.gp = gp;
+        super(gp);
         this.keyH = keyH;
 
-        screenX = gp.screenWidth / 2 - (playerSize / 2);
-        screenY = gp.screenHeight / 2 - (playerSize / 2);
+        screenX = gp.screenWidth / 2 - (entitySize / 2);
+        screenY = gp.screenHeight / 2 - (entitySize / 2);
 
         solidArea = new Rectangle();
         solidArea.x = 33;
         solidArea.y = 49;
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
         solidArea.width = 62;
         solidArea.height = 62;
 
@@ -48,30 +47,23 @@ public class Player extends Entity {
     }
 
     public void getPlayerImage() {
-        try {
-            up1 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Up_1.png"));
-            up2 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Up_2.png"));
-            up3 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Up_3.png"));
-            up4 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Up_4.png"));
 
-            left1 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Left_1.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Left_2.png"));
-            left3 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Left_3.png"));
-            left4 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Left_4.png"));
+        up1 = setup("/player/walk_up_1");
+        up2 = setup("/player/walk_up_2");
+        up3 = setup("/player/walk_up_3");
 
-            down1 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Down_1.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Down_2.png"));
-            down3 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Down_3.png"));
-            down4 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Down_4.png"));
+        left1 = setup("/player/walk_left_1");
+        left2 = setup("/player/walk_left_2");
+        left3 = setup("/player/walk_left_3");
 
-            right1 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Right_1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Right_2.png"));
-            right3 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Right_3.png"));
-            right4 = ImageIO.read(getClass().getResourceAsStream("/player/Walk_Right_4.png"));
+        down1 = setup("/player/walk_down_1");
+        down2 = setup("/player/walk_down_2");
+        down3 = setup("/player/walk_down_3");
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        right1 = setup("/player/walk_right_1");
+        right2 = setup("/player/walk_right_2");
+        right3 = setup("/player/walk_right_3");
+
     }
 
     public void update() {
@@ -95,6 +87,14 @@ public class Player extends Entity {
                 // CHECK TILE COLLISION
                 collisionOn = false;
                 gp.cChecker.checkTile(this);
+
+                // CHECK OBJECT COLLISION
+                int objectIndex = gp.cChecker.checkObject(this, true);
+
+
+                // CHECK NPC COLLISION
+                int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+                interactNPC(npcIndex);
             } else {
                 standCounter++;
                 if (standCounter == 20) {
@@ -123,16 +123,10 @@ public class Player extends Entity {
             }
 
             spriteCounter++;
+
             if (spriteCounter > 10) {
-                if (spriteNum == 1) {
-                    spriteNum = 2;
-                } else if (spriteNum == 2) {
-                    spriteNum = 3;
-                } else if (spriteNum == 3) {
-                    spriteNum = 4;
-                } else if (spriteNum == 4) {
-                    spriteNum = 1;
-                }
+                orderIndex = (orderIndex + 1) % spriteOrder.length;
+                spriteNum = spriteOrder[orderIndex];
                 spriteCounter = 0;
             }
 
@@ -145,12 +139,19 @@ public class Player extends Entity {
         }
     }
 
+    public void interactNPC(int i) {
+        if (i != 999 ) {
+            System.out.println("You are hitting npc");
+        }
+
+    }
+
     public void draw(Graphics2D g2) {
         BufferedImage image = null;
-        BufferedImage[] up = {up1, up2, up3, up4};
-        BufferedImage[] left = {left1, left2, left3, left4};
-        BufferedImage[] down = {down1, down2, down3, down4};
-        BufferedImage[] right = {right1, right2, right3, right4};
+        BufferedImage[] up = {up1, up2, up3};
+        BufferedImage[] left = {left1, left2, left3};
+        BufferedImage[] down = {down1, down2, down3};
+        BufferedImage[] right = {right1, right2, right3};
 
         switch (direction) {
             case "up" -> image = up[spriteNum - 1];
@@ -158,7 +159,7 @@ public class Player extends Entity {
             case "down" -> image = down[spriteNum - 1];
             case "right" -> image = right[spriteNum - 1];
         }
-        g2.drawImage(image, screenX, screenY-8, playerSize, playerSize, null);
+        g2.drawImage(image, screenX, screenY-8, null);
         g2.setColor(Color.red);
         g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
     }
