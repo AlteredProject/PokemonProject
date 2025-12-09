@@ -2,10 +2,9 @@ package main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
 
 public class KeyHandler implements KeyListener{
-    public boolean upPressed, leftPressed, downPressed, rightPressed, shiftPressed, pokedexPressed;
+    public boolean upPressed, leftPressed, downPressed, rightPressed, shiftPressed, pPressed;
     private int count = 0;
     @Override
     public void keyTyped(KeyEvent e) {
@@ -34,10 +33,10 @@ public class KeyHandler implements KeyListener{
         }
         if(code == KeyEvent.VK_P){
             if(count == 1) {
-                pokedexPressed = false;
+                pPressed = false;
                 count = 0;
             } else {
-                pokedexPressed = true;
+                pPressed = true;
                 count++;
             }
         }

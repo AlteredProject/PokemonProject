@@ -134,9 +134,11 @@ public class GamePanel extends JPanel implements Runnable {
         button.drawpokedexIcon(g2);
 
         //Pokedex
-        if (keyH.pokedexPressed||leftClick.clicked && leftClick.mousePressed2(40, 696, 44, 58)) {
-            pokedex.draw(g2);
+        if (keyH.pPressed ||leftClick.clicked && leftClick.mousePressedBox(40, 696, 44, 58) && leftClick.getCount() == 1) {
+                pokedex.draw(g2);
+                button.drawpokedexButtons(g2);
         }
+
 
         // DEBUG
         long passedTime = System.nanoTime() - drawStart;

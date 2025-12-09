@@ -6,7 +6,7 @@ import java.awt.event.MouseListener;
 
 public class ClickHandler implements MouseListener {
     public boolean clicked;
-    private int count = 0;
+    private int count;
     private int x;
     private int y;
 
@@ -46,7 +46,7 @@ public class ClickHandler implements MouseListener {
 
     }
 
-    public boolean mousePressed2(int worldX, int worldY, int width, int height) {
+    public boolean mousePressedBox(int worldX, int worldY, int width, int height) {
         Rectangle rect = new Rectangle(worldX, worldY, width, height);
 
 
@@ -54,4 +54,7 @@ public class ClickHandler implements MouseListener {
         return isPointInside;
     }
 
+    public int getCount() {
+        return count;
+    }
 }

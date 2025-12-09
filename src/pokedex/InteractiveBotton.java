@@ -12,9 +12,9 @@ import main.KeyHandler;
 
 public class InteractiveBotton {
 
-    public final int worldX = 25;
-    public final int worldY = 690;
-    public BufferedImage pokedexIcon;
+    public int worldX;
+    public int worldY;
+    public BufferedImage pokedexIcon, searhPokemonGreen;
 
     GamePanel gp;
     KeyHandler keyH;
@@ -37,7 +37,7 @@ public class InteractiveBotton {
     public void getBottonImage() {
         try {
             pokedexIcon = ImageIO.read(getClass().getResourceAsStream("/pokedexSprites/pokedexIcon.png"));
-
+            searhPokemonGreen = ImageIO.read(getClass().getResourceAsStream("/pokedexSprites/searchPokemonGreen.png"));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,9 +45,18 @@ public class InteractiveBotton {
     }
 
     public void drawpokedexIcon(Graphics2D g2) {
+        worldX = 25;
+        worldY = 690;
         BufferedImage image = pokedexIcon;
-
         g2.drawImage(image, worldX, worldY, pokedexSizeWidth, pokedexSizeHeight, null);
+    }
+    public void drawpokedexButtons(Graphics2D g2){
+        worldX = 225;
+        worldY = 575;
+        int width = 98*2;
+        int height = 43*2;
+        BufferedImage image = searhPokemonGreen;
+        g2.drawImage(image, worldX, worldY, width, height, null);
     }
 }
 
