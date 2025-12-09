@@ -1,5 +1,6 @@
 package main;
 
+import battleSystem.Battle;
 import entity.Player;
 import object.SuperObject;
 import pokedex.InteractiveBotton;
@@ -39,6 +40,13 @@ public class GamePanel extends JPanel implements Runnable {
     public AssetSetter aSetter = new AssetSetter(this);
     Thread gameThread;
 
+    // === GAME STATE ===
+    public static final int statePlay = 0;
+    public static final int statePause = 1;
+    public static final int stateBattle = 2;
+
+    public int gameState = statePlay;
+
     // == ENTITY & PLAYER ===
     public Player player = new Player(this, keyH);
     public SuperObject[] obj = new SuperObject[10];
@@ -50,6 +58,9 @@ public class GamePanel extends JPanel implements Runnable {
     // === WORLD SETTINGS ===
     public final int maxWorldCol = 100;
     public final int maxWorldRow = 100;
+
+    // === BATTLE SYSTEM ===
+    public Battle battle;
 
     // === FPS ===
     int FPS = 60;
@@ -106,7 +117,26 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     public void update() {
-        player.update();
+
+        if (gameState == statePlay) {
+            // Normal Overworld
+            player.update();
+
+            if (keyH.bPressed){
+                this.battle = new Battle(this,null,null);
+                this.gameState = stateBattle;
+            }
+
+        } else if (gameState == stateBattle){
+            // Battle screen
+            if (battle != null){
+                battle.update();
+            }
+
+            if (keyH.spacePressed){
+                battle.endBattle();
+            }
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -121,23 +151,34 @@ public class GamePanel extends JPanel implements Runnable {
         // DEBUG
         long drawStart = System.nanoTime();
 
-        tileM.drawLayer(g2, tileM.mapTileNumBackground);
-        for (int i = 0; i < obj.length; i++) {
-            if (obj[i] != null) {
-                obj[i].draw(g2, this);
+        if (gameState == statePlay) {
+            tileM.drawLayer(g2, tileM.mapTileNumBackground);
+            for (int i = 0; i < obj.length; i++) {
+                if (obj[i] != null) {
+                    obj[i].draw(g2, this);
+                }
             }
-        }
-        tileM.drawLayer(g2, tileM.mapTileNumEnvironmentB);
-        player.draw(g2);
-        tileM.drawLayer(g2, tileM.mapTileNumEnvironmentF);
+            tileM.drawLayer(g2, tileM.mapTileNumEnvironmentB);
+            player.draw(g2);
+            tileM.drawLayer(g2, tileM.mapTileNumEnvironmentF);
 
-        //Pokedex Icon
-        button.drawpokedexIcon(g2);
+            //Pokedex Icon
+            button.drawpokedexIcon(g2);
 
-        //Pokedex
-        if (keyH.pPressed ||leftClick.clicked && leftClick.mousePressedBox(40, 696, 44, 58) && leftClick.getCount() == 1) {
-                pokedex.draw(g2);
-                button.drawpokedexButtons(g2);
+            //Pokedex
+            if (keyH.pPressed ||leftClick.clicked && leftClick.mousePressedBox(40, 696, 44, 58) && leftClick.getCount() == 1) {
+                    pokedex.draw(g2);
+                    button.drawpokedexButtons(g2);
+            }
+        } else if (gameState == stateBattle){
+            if (battle != null){
+                battle.draw(g2);
+            } else{
+                g2.setColor(Color.lightGray);
+                g2.drawString("BATTLE STATE (no battle object)", 50, 50);
+
+                // probably gonna need to use the g2.draw... function like g2.drawImage();
+            }
         }
 
 
