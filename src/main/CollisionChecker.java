@@ -33,11 +33,14 @@ public class CollisionChecker {
                 boolean collidingBackground =
                         isTileColliding(gp.tileM.mapTileNumBackground, entityLeftCol, entityTopRow) ||
                         isTileColliding(gp.tileM.mapTileNumBackground, entityRightCol, entityTopRow);
-                boolean collidingEnvironment =
-                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityLeftCol, entityTopRow) ||
-                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityRightCol, entityTopRow);
+                boolean collidingEnvironmentB =
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentB, entityLeftCol, entityTopRow) ||
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentB, entityRightCol, entityTopRow);
+                boolean collidingEnvironmentF =
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentF, entityLeftCol, entityTopRow) ||
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentF, entityRightCol, entityTopRow);
 
-                if(collidingBackground || collidingEnvironment) {
+                if(collidingBackground || collidingEnvironmentB || collidingEnvironmentF) {
                     entity.collisionOn = true;
                 }
             }
@@ -47,11 +50,14 @@ public class CollisionChecker {
                 boolean collidingBackground =
                         isTileColliding(gp.tileM.mapTileNumBackground, entityLeftCol, entityTopRow) ||
                         isTileColliding(gp.tileM.mapTileNumBackground, entityLeftCol, entityBottomRow);
-                boolean collidingEnvironment =
-                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityLeftCol, entityTopRow) ||
-                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityLeftCol, entityBottomRow);
+                boolean collidingEnvironmentB =
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentB, entityLeftCol, entityTopRow) ||
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentB, entityLeftCol, entityBottomRow);
+                boolean collidingEnvironmentF =
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentF, entityLeftCol, entityTopRow) ||
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentF, entityLeftCol, entityBottomRow);
 
-                if(collidingBackground || collidingEnvironment) {
+                if(collidingBackground || collidingEnvironmentB || collidingEnvironmentF) {
                     entity.collisionOn = true;
                 }
             }
@@ -61,10 +67,14 @@ public class CollisionChecker {
                 boolean collidingBackground =
                         isTileColliding(gp.tileM.mapTileNumBackground, entityLeftCol, entityBottomRow) ||
                         isTileColliding(gp.tileM.mapTileNumBackground, entityRightCol, entityBottomRow);
-                boolean collidingEnvironment =
-                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityLeftCol, entityBottomRow) ||
-                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityRightCol, entityBottomRow);
-                if(collidingBackground || collidingEnvironment) {
+                boolean collidingEnvironmentB =
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentB, entityLeftCol, entityBottomRow) ||
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentB, entityRightCol, entityBottomRow);
+                boolean collidingEnvironmentF =
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentF, entityLeftCol, entityBottomRow) ||
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentF, entityRightCol, entityBottomRow);
+
+                if(collidingBackground || collidingEnvironmentB || collidingEnvironmentF) {
                     entity.collisionOn = true;
                 }
             }
@@ -74,10 +84,14 @@ public class CollisionChecker {
                 boolean collidingBackground =
                         isTileColliding(gp.tileM.mapTileNumBackground, entityRightCol, entityTopRow) ||
                         isTileColliding(gp.tileM.mapTileNumBackground, entityRightCol, entityBottomRow);
-                boolean collidingEnvironment =
-                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityRightCol, entityTopRow) ||
-                        isTileColliding(gp.tileM.mapTileNumEnvironment, entityRightCol, entityBottomRow);
-                if(collidingBackground || collidingEnvironment) {
+                boolean collidingEnvironmentB =
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentB, entityRightCol, entityTopRow) ||
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentB, entityRightCol, entityBottomRow);
+                boolean collidingEnvironmentF =
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentF, entityRightCol, entityTopRow) ||
+                        isTileColliding(gp.tileM.mapTileNumEnvironmentF, entityRightCol, entityBottomRow);
+
+                if(collidingBackground || collidingEnvironmentB || collidingEnvironmentF) {
                     entity.collisionOn = true;
                 }
             }
