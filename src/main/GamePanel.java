@@ -1,5 +1,6 @@
 package main;
 
+import entity.Entity;
 import entity.Player;
 import object.SuperObject;
 import pokedex.InteractiveBotton;
@@ -37,13 +38,20 @@ public class GamePanel extends JPanel implements Runnable {
     Sound sfx = new Sound();
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
+    public UI ui = new UI(this);
     Thread gameThread;
 
-    // == ENTITY & PLAYER ===
+    // == ENTITY & OBJECT ===
     public Player player = new Player(this, keyH);
     public SuperObject[] obj = new SuperObject[10];
+    public Entity[] npc = new Entity[10];
 
-    // == POKEDEX & BUTTONS
+    // == GAME STATE ==
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
+
+    // == POKEDEX & BUTTONS ==
     private boolean isPokedexShown = false;
     public InteractiveBotton button = new InteractiveBotton(this, keyH, leftClick);
     public Pokedex pokedex = new Pokedex(this, keyH);
@@ -67,7 +75,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setupGame() {
         aSetter.setObject();
+        aSetter.setNPC();
         playMusic(0);
+        gameState = playState;
     }
 
     public void startGameThread() {
@@ -107,7 +117,17 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     public void update() {
-        player.update();
+        if (gameState == playState) {
+            player.update();
+            for(int i = 0; i < npc.length; i++) {
+                if(npc[i] != null) {
+                    npc[i].update();
+                }
+            }
+        }
+        if (gameState == pauseState) {
+
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -122,14 +142,30 @@ public class GamePanel extends JPanel implements Runnable {
         // DEBUG
         long drawStart = System.nanoTime();
 
+        // Background Layer
         tileM.drawLayer(g2, tileM.mapTileNumBackground);
+
+        // Object Layer
         for (int i = 0; i < obj.length; i++) {
             if (obj[i] != null) {
                 obj[i].draw(g2, this);
             }
         }
+
+        // Environment Behind player
         tileM.drawLayer(g2, tileM.mapTileNumEnvironmentB);
+
+        // NPCs
+        for(int i = 0; i < npc.length; i++) {
+            if(npc[i] != null) {
+                npc[i].draw(g2);
+            }
+        }
+
+        // Player
         player.draw(g2);
+
+        // Environment Front of player
         tileM.drawLayer(g2, tileM.mapTileNumEnvironmentF);
 
         //Pokedex Icon
@@ -140,6 +176,9 @@ public class GamePanel extends JPanel implements Runnable {
             pokedex.draw(g2);
             button.drawpokedexButtons(g2);
         }
+
+        // UI
+        ui.draw(g2);
 
         // DEBUG
         long passedTime = System.nanoTime() - drawStart;
@@ -167,7 +206,7 @@ public class GamePanel extends JPanel implements Runnable {
                         "Draw: %.3f ms | Highest: %.3f ms | Average: %.3f ms%n",
                         passedMs, highestMs, averageMs
                 );
-                System.out.println("xPos: " + player.worldX/64 + " yPos: " + player.worldY/64);
+                System.out.println("xPos: " + ((player.worldX/64)+1) + " yPos: " + ((player.worldY/64)+1));
                 frameSincePrint = 0;
             }
         }
