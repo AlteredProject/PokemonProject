@@ -34,8 +34,8 @@ public class GamePanel extends JPanel implements Runnable {
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler(this);
     ClickHandler leftClick = new ClickHandler(this);
-    Sound music = new Sound();
-    Sound sfx = new Sound();
+
+    //Sound sfx = new Sound();
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
@@ -60,6 +60,10 @@ public class GamePanel extends JPanel implements Runnable {
     public final int maxWorldCol = 100;
     public final int maxWorldRow = 100;
 
+    Sound music = new Sound(this,player);
+    public Sound collisionSound = new Sound(this,player);
+    public Sound buttonSound = new Sound(this,player);
+
     // === FPS ===
     int FPS = 60;
 
@@ -74,9 +78,9 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void setupGame() {
+        playMusic();
         aSetter.setObject();
         aSetter.setNPC();
-        playMusic(0);
         gameState = playState;
     }
 
@@ -119,6 +123,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         if (gameState == playState) {
             player.update();
+            music.updateMusic();
             for(int i = 0; i < npc.length; i++) {
                 if(npc[i] != null) {
                     npc[i].update();
@@ -215,20 +220,22 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
 
-    public void playMusic(int i) {
-        music.setFile(i);
+    public void playMusic() {
+        music.setFile();
         music.play();
-        music.loop();
+
     }
 
     public void stopMusic() {
         music.stop();
     }
 
-    public void playSFX(int i) {
-        sfx.setFile(i);
+    /*public void playSFX(int i) {
+        sfx.setFile();
         sfx.play();
     }
+
+     */
 
     public void switchPokedexStatus() {
         this.isPokedexShown = !this.isPokedexShown;

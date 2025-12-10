@@ -20,6 +20,7 @@ public class Player extends Entity {
     int[] spriteOrder = { 1, 2, 1, 3 };
     int orderIndex = 0;
 
+
     public Player(GamePanel gp, KeyHandler keyH) {
         super(gp);
         this.keyH = keyH;
@@ -163,4 +164,6 @@ public class Player extends Entity {
         g2.setColor(Color.red);
         g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
     }
+
+
 }
