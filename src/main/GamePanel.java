@@ -196,7 +196,6 @@ public class GamePanel extends JPanel implements Runnable {
         sfx.setFile();
         sfx.play();
     }
-
      */
 
     public void switchPokedexStatus() {
