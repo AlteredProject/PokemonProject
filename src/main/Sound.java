@@ -30,10 +30,12 @@ public class Sound {
         int x = (player.worldX / gp.tileSize) +1;
         int y = (player.worldY / gp.tileSize) +1;
 
-        if (x == 12 && y == 39) return 2; // Lab
-        if (x <= 27 && y >= 38 && y <= 56) return 0; // twinleaf
-        if (x > 27 && x <= 55 && y >= 14 && y <= 64) return 1; // route 1
-        if (x > 55 && x <= 70 && y >= 14 && y <= 64) return 1; // route 1
+        if (x > 42 && x <= 71 && y >= 5 && y <= 22) return 4;// floaroma town
+        else if (x == 12 && y == 39) {return 2;} // Lab
+        else if (x <= 27 && y >= 38 && y <= 56) {return 0; }// twinleaf
+        else if (x >= 27 && x <= 54 && y >= 17 && y <= 64) {return 1;} // route 1
+        else if (x <= 42 && y < 34) {return 3;} // lake
+        else if (x >= 71 && x <= 92 && y >= 7 && y <= 53) {return 5;} // forest
         else return 3;
     }
 
