@@ -111,11 +111,11 @@ public class GamePanel extends JPanel implements Runnable {
                 repaint();
             }
 
-//            if (System.currentTimeMillis() - timer >= 1000) {
-//                System.out.println("FPS: " + drawCount);
-//                drawCount = 0;
-//                timer += 1000;
-//            }
+            if (System.currentTimeMillis() - timer >= 1000) {
+                System.out.println("FPS: " + drawCount);
+                drawCount = 0;
+                timer += 1000;
+            }
         }
     }
 
