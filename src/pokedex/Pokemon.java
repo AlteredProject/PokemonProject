@@ -27,16 +27,9 @@ public class Pokemon {
     public EntryStats[] stats;
     public boolean validPokemon = true;
     private String pokemonSprite;
+    private String path;
 
-
-    public void pokedexLoad(){
-
-        Scanner sc = new Scanner(System.in);
-        System.out.println("=========================================");
-        System.out.println("Welcome to the international pokédex database");
-        System.out.print("Please enter pokemon name: ");
-        this.name = sc.nextLine().toLowerCase();
-
+    public void pokedexLoad() {
         File outputFile = new File("src/resources/pokedexPngCache/" + "pokemon_id_" + this.name + ".png");
 
         if (outputFile.exists()) {
@@ -107,7 +100,7 @@ public class Pokemon {
             printAligned(String.valueOf(stat.stat.name.toUpperCase()), String.valueOf(stat.base_stat));
 
         }
-        String path = "src/resources/pokedexPngCache/pokemon_id_" + this.id + ".png";
+        path = "src/resources/pokedexPngCache/pokemon_id_" + this.name + ".png";
 
         pokemonSprite = this.sprites.front_default;
         System.out.println();
@@ -154,7 +147,7 @@ public class Pokemon {
                 return;
             }
             try {
-                File outputFile = new File("src/resources/pokedexPngCache/" + "pokemon_id_" + this.id + ".png");
+                File outputFile = new File("src/resources/pokedexPngCache/" + "pokemon_id_" + this.name + ".png");
                 boolean success = ImageIO.write(pokemonPng, "png", outputFile);
                 if (success) {
                     System.out.println("Billedet blev gemt korrekt som: " + outputFile.getAbsolutePath());
@@ -191,6 +184,13 @@ public class Pokemon {
         }
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
 
 

@@ -26,20 +26,22 @@ public class Entity {
     public int solidAreaDefaultY;
     public boolean collisionOn = false;
 
-    public Entity (GamePanel gp) {
+    public Entity(GamePanel gp) {
         this.gp = gp;
     }
 
-    public void setAction() {} // Might be used later for NPC interaction
+    public void setAction() {
+    } // Might be used later for NPC interaction
 
-    public void update() {}
+    public void update() {
+    }
 
 
     public void draw(Graphics2D g2) {
-        int cameraLeft   = gp.player.worldX - gp.player.screenX;
-        int cameraTop    = gp.player.worldY - gp.player.screenY;
-        int cameraRight  = cameraLeft + gp.screenWidth;
-        int cameraBottom = cameraTop  + gp.screenHeight;
+        int cameraLeft = gp.player.worldX - gp.player.screenX;
+        int cameraTop = gp.player.worldY - gp.player.screenY;
+        int cameraRight = cameraLeft + gp.screenWidth;
+        int cameraBottom = cameraTop + gp.screenHeight;
 
         if (worldX + gp.tileSize >= cameraLeft &&
                 worldX <= cameraRight &&

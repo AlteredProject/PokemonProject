@@ -12,11 +12,16 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Scanner;
 
 public class Pokedex {
     public int worldX, worldY = 0;
-
-    public BufferedImage pokedexBoy, pokedexGirl, pokemonSprite;
+    private int pokemonX = 225;
+    private int pokemonY = 300;
+    private int pokemonSize = 96;
+    private String name;
+    private String path;
+    private BufferedImage pokedexBoy, pokedexGirl, pokemonSprite;
 
     GamePanel gp;
     KeyHandler keyH;
@@ -29,7 +34,6 @@ public class Pokedex {
     public final int pokedexSizeWidth = originalPokedexWidth * 4; // 1024*768 px
     public final int pokedexSizeHeight = originalPokedexHeight * 4;
     private BufferedImage pokedexCache;
-    private Graphics2D g2;
 
     // Constructor
     public Pokedex(GamePanel gp, KeyHandler keyH) {
@@ -48,8 +52,6 @@ public class Pokedex {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     // Tegner pokedex girl
@@ -64,12 +66,14 @@ public class Pokedex {
         g2.drawImage(image, worldX, worldY, pokedexSizeWidth, pokedexSizeHeight, null);
     }
 
-    // Tegner pokemon PNG fra enten cache eller API
-    public void drawPokedexSprite(Graphics2D g2, int x, int y, int width, int height) {
-        BufferedImage image = pokemonSprite;
-        g2.drawImage(image, x, y, width * 2, height * 2, null);
+    // Scanner for input og ser om filen findes lokalt eller skal loades fra API
+    public void searchForPokemon() {
+        scanForInput();
 
-        File outputFile = new File("src/resources/pokedexPngCache/" + "pokemon_id_" + pokemon.name + ".png");
+        pokemon.pokedexLoad();
+
+        path = pokemon.getPath();
+        File outputFile = new File(path);
         if (outputFile.exists()) {
             loadPokemonCache();
             System.out.println("Already exist");
@@ -79,12 +83,19 @@ public class Pokedex {
         }
     }
 
-    // Loader pokemon sprite til pokedex fra API
+    // Tegner pokemon PNG fra enten cache eller API
+    public void drawPokedexSprite(Graphics2D g2) {
+        if (pokemonSprite != null) {
+            g2.drawImage(pokemonSprite, pokemonX, pokemonY, pokemonSize, pokemonSize, null);
+        }
+    }
+
+    // Loader pokemon sprite til BufferedImage pokemonSprite fra API
     public void loadPokemonToPokedex() {
         String imageUrl = pokemon.getPokemonSprite();
         URL url;
         try {
-            URI uri = new URI("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/5.png"); //imageurl sættes ind her i stedet, når søgefunktion er klar
+            URI uri = new URI(imageUrl); //imageurl sættes ind her i stedet, når søgefunktion er klar
             url = uri.toURL();
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
@@ -94,19 +105,30 @@ public class Pokedex {
         pokemonSprite = pokemon.loadImageFromUrl(url);
     }
 
-    // Loader pokemon sprite til pokedex fra cache
+    // Loader pokemon sprite til BufferedImage pokemonSprite fra cache
     public void loadPokemonCache() {
         try {
-            pokedexCache = ImageIO.read(getClass().getResourceAsStream("src/resources/pokedexPngCache/" + "pokemon_id_" + pokemon.name + ".png"));
+            File file = new File(path);
+            if (file.exists()) {
+                pokedexCache = ImageIO.read(file);
+            } else {
+                System.out.println("File not found at " + path);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int x = 225;
-        int y = 300;
-        int size = 96;
-        BufferedImage image = pokedexCache;
-        g2.drawImage(image, x, y, size, size, null);
+        pokemonSprite = pokedexCache;
     }
+
+    public void scanForInput() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("=========================================");
+        System.out.println("Welcome to the international pokédex database");
+        System.out.print("Please enter pokemon name: ");
+        name = sc.nextLine().toLowerCase();
+        pokemon.setName(name);
+    }
+
 }
 
 
