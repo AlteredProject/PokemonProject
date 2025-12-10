@@ -27,16 +27,28 @@ public class Sound {
     // MUSIC ZONE HANDLING
     // ============================
     public int getMusicZone() {
-        int x = (player.worldX / gp.tileSize) +1;
-        int y = (player.worldY / gp.tileSize) +1;
+        int x = (player.worldX / gp.tileSize) + 1;
+        int y = (player.worldY / gp.tileSize) + 1;
 
         if (x > 42 && x <= 71 && y >= 5 && y <= 22) return 4;// floaroma town
-        else if (x == 12 && y == 39) {return 2;} // Lab
-        else if (x <= 27 && y >= 38 && y <= 56) {return 0; }// twinleaf
-        else if (x >= 27 && x <= 54 && y >= 17 && y <= 64) {return 1;} // route 1
-        else if (x <= 42 && y < 34) {return 3;} // lake
-        else if (x >= 71 && x <= 92 && y >= 7 && y <= 53) {return 5;} // forest
-        else return 3;
+        else if (x>=49 && x <= 55 && y>=62 && y <=66) return 6; // route 203 extra corner
+        else if (x == 18 && y == 85) return 10; // PokeMart
+        else if (x == 11 && y == 85) return 9; // PokeCenter
+        else if (x == 11 && y == 76) return 11; // BattleArena
+        else if (x >= 38 && x < 94 && y >= 83 && y <= 94) return 8; // valley
+        else if (x <= 38 && y >= 62 && y <= 91) return 7; // big town
+        else if (x >= 27 && x <= 54 && y >= 17 && y <= 65) return 1; // route 1
+        else if (x >= 40 && x <= 92 && y >= 55 && y <= 73) return 6; // route 203
+        else if (x == 12 && y == 39) return 2; // Lab
+        else if (x <= 27 && y >= 38 && y <= 57) return 0; // twinleaf
+        else if (x <= 42 && y < 34) return 3; // lake
+        else if (x >= 71 && x <= 92 && y >= 7 && y <= 54) return 5; // forest
+
+
+
+
+
+        else return 1;
     }
 
     public void updateMusic() {
@@ -48,6 +60,7 @@ public class Sound {
             setFile();
             play();
             loop();
+            //fadeIn();
         }
     }
 
@@ -63,6 +76,13 @@ public class Sound {
         soundURL[2] = getClass().getResource("/sound/Lab.wav");
         soundURL[3] = getClass().getResource("/sound/Lake.wav");
         soundURL[4] = getClass().getResource("/sound/FloaromaTown.wav");
+        soundURL[5] = getClass().getResource("/sound/EternaForest.wav");
+        soundURL[6] = getClass().getResource("/sound/Route203.wav");
+        soundURL[7] = getClass().getResource("/sound/SolaceonTown.wav");
+        soundURL[8] = getClass().getResource("/sound/Mt.Coronet.wav");
+        soundURL[9] = getClass().getResource("/sound/PokeCenter.wav");
+        soundURL[10] = getClass().getResource("/sound/PokeMart.wav");
+        soundURL[11] = getClass().getResource("/sound/BattleTheme.wav");
         soundURL[20] = getClass().getResource("/sound/collision.wav");
         soundURL[21] = getClass().getResource("/sound/button.wav");
 
@@ -115,7 +135,6 @@ public class Sound {
 
     public void play() {
         clip.start();
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
     public void loop() {
@@ -129,12 +148,13 @@ public class Sound {
         }
     }
 
+
     // ============================
     //         FADE UPDATE
     // ============================
 
 
-    /*public void updateFade() {
+    public void updateFade() {
         if (!isFading || gainControl == null) return;
 
         if (Math.abs(volume - targetVolume) > 0.5f) {
@@ -142,7 +162,7 @@ public class Sound {
             if (volume < targetVolume)
                 volume += fadeSpeed;       // fade IN
             else
-                volume -= fadeSpeed;       // fade OUT
+                volume -= fadeSpeed;
 
             gainControl.setValue(volume);
 
@@ -157,7 +177,7 @@ public class Sound {
     public void fadeIn() {
         volume = -40f;
         targetVolume = -10f;
-        fadeSpeed = 1.0f;
+        fadeSpeed = 0.2f;
         isFading = true;
 
         gainControl.setValue(volume);
@@ -167,10 +187,9 @@ public class Sound {
     public void fadeOut() {
         volume = -10f;
         targetVolume = -40f;
-        fadeSpeed = 1.0f;
+        fadeSpeed = 0.2f;
         isFading = true;
     }
 
-     */
 
 }
