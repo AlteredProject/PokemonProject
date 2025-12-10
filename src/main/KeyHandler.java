@@ -40,6 +40,11 @@ public class KeyHandler implements KeyListener{
         }
         if(code == KeyEvent.VK_P) {
             gp.switchPokedexStatus();
+            if (gp.gameState == gp.playState) {
+                gp.gameState = gp.pokedexState;
+            } else if (gp.gameState == gp.pokedexState) {
+                gp.gameState = gp.playState;
+            }
         }
         if(code == KeyEvent.VK_ESCAPE) {
             if (gp.gameState == gp.playState) {

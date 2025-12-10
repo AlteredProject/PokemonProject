@@ -50,7 +50,8 @@ public class GamePanel extends JPanel implements Runnable {
     public int gameState;
     public final int playState = 1;
     public final int pauseState = 2;
-    public final int pokedexSearchState = 3;
+    public final int pokedexState = 3;
+    public final int pokedexSearchState = 4;
 
     // == POKEDEX & BUTTONS ==
     private boolean isPokedexShown = false;
@@ -180,7 +181,17 @@ public class GamePanel extends JPanel implements Runnable {
         //Pokedex
         if (isPokedexShown) {
             pokedex.drawPokedexGirl(g2);
-            button.drawpokedexButtons(g2);
+            button.drawpokedexSearchButton(g2);
+            gameState = pokedexState;
+        } else {
+            gameState = playState;
+        }
+        if(gameState == pokedexSearchState){
+            pokedex.searchForPokemon();
+            gameState=pokedexState;
+        }
+        if (gameState == pokedexState || gameState ==pokedexSearchState){
+            pokedex.drawPokedexSprite(g2);
         }
 
         // UI

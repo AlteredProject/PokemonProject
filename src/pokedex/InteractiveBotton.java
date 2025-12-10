@@ -50,7 +50,7 @@ public class InteractiveBotton {
         BufferedImage image = pokedexIcon;
         g2.drawImage(image, worldX, worldY, pokedexSizeWidth, pokedexSizeHeight, null);
     }
-    public void drawpokedexButtons(Graphics2D g2){
+    public void drawpokedexSearchButton(Graphics2D g2){
         worldX = 225;
         worldY = 575;
         int width = 98*2;
