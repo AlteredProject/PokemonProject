@@ -68,6 +68,10 @@ public class Player extends Entity {
     }
 
     public void update() {
+        if (keyH.ePressed) {
+            int npcIndex = gp.cChecker.checkEntityInteraction(this, gp.npc);
+            interactNPC(npcIndex);
+        }
 
         if (moving == false) {
             if (keyH.upPressed || keyH.leftPressed || keyH.downPressed || keyH.rightPressed) {
@@ -94,8 +98,7 @@ public class Player extends Entity {
 
 
                 // CHECK NPC COLLISION
-                int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
-                interactNPC(npcIndex);
+                gp.cChecker.checkEntityCollision(this, gp.npc);
             } else {
                 standCounter++;
                 if (standCounter == 20) {
@@ -142,9 +145,9 @@ public class Player extends Entity {
 
     public void interactNPC(int i) {
         if (i != 999 ) {
-            System.out.println("You are hitting npc");
+            gp.gameState = gp.dialogueState;
+            gp.npc[i].speak();
         }
-
     }
 
     public void draw(Graphics2D g2) {
