@@ -209,11 +209,11 @@ public class GamePanel extends JPanel implements Runnable {
             frameSincePrint++;
             int printInterval = 30;
             if (frameSincePrint >= printInterval) {
-                System.out.printf(
-                        "Draw: %.3f ms | Highest: %.3f ms | Average: %.3f ms%n",
-                        passedMs, highestMs, averageMs
-                );
-                System.out.println("xPos: " + ((player.worldX/64)+1) + " yPos: " + ((player.worldY/64)+1));
+//                System.out.printf(
+//                        "Draw: %.3f ms | Highest: %.3f ms | Average: %.3f ms%n",
+//                        passedMs, highestMs, averageMs
+//                );
+//                System.out.println("xPos: " + ((player.worldX/64)+1) + " yPos: " + ((player.worldY/64)+1));
                 frameSincePrint = 0;
             }
         }

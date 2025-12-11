@@ -16,7 +16,8 @@ public class Sound {
     float volume = -10f;           // current volume
     float targetVolume = -10f;     // Target fade
     float fadeSpeed = 1.0f;        // Fade speed
-    boolean isFading = false;
+    boolean fadingIn = false;
+    boolean fadingOut = false;
     FloatControl gainControl;
 
     // ===== Collision cooldown =====
@@ -44,10 +45,6 @@ public class Sound {
         else if (x <= 42 && y < 34) return 3; // lake
         else if (x >= 71 && x <= 92 && y >= 7 && y <= 54) return 5; // forest
 
-
-
-
-
         else return 1;
     }
 
@@ -56,11 +53,7 @@ public class Sound {
 
         if (newZone != musicZone) {
             musicZone = newZone;
-            stop();
-            setFile();
-            play();
-            loop();
-            //fadeIn();
+            fadeOut();
         }
     }
 
@@ -152,44 +145,56 @@ public class Sound {
     // ============================
     //         FADE UPDATE
     // ============================
-
-
     public void updateFade() {
-        if (!isFading || gainControl == null) return;
-
-        if (Math.abs(volume - targetVolume) > 0.5f) {
-
-            if (volume < targetVolume)
-                volume += fadeSpeed;       // fade IN
-            else
+        // Fade OUT
+        if (fadingOut) {
+            if (volume > targetVolume) {
                 volume -= fadeSpeed;
+                gainControl.setValue(volume);
+            } else {
+                volume = targetVolume;
+                gainControl.setValue(volume);
+                stop();
+                fadingOut = false;
+                setFile();
+                fadeIn();
+            }
+        }
 
-            gainControl.setValue(volume);
-
-        } else {
-            // Fade completed
-            volume = targetVolume;
-            gainControl.setValue(volume);
-            isFading = false;
+        // Fade IN
+        else if (fadingIn) {
+            if (volume < targetVolume) {
+                volume += fadeSpeed;
+                gainControl.setValue(volume);
+            } else {
+                volume = targetVolume;
+                gainControl.setValue(volume);
+                fadingIn = false;
+            }
         }
     }
 
     public void fadeIn() {
+        fadingIn = true;
+        fadingOut = false;
+
         volume = -40f;
         targetVolume = -10f;
         fadeSpeed = 0.2f;
-        isFading = true;
 
         gainControl.setValue(volume);
-
+        play();
+        loop();
     }
 
     public void fadeOut() {
+        fadingOut = true;
+        fadingIn = false;
+
         volume = -10f;
         targetVolume = -40f;
         fadeSpeed = 0.2f;
-        isFading = true;
+
+        gainControl.setValue(volume);
     }
-
-
 }
