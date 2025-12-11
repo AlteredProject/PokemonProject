@@ -5,6 +5,7 @@ import entity.Player;
 import object.SuperObject;
 import pokedex.InteractiveBotton;
 import pokedex.Pokedex;
+import pokedex.Pokemon;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -123,7 +124,10 @@ public class GamePanel extends JPanel implements Runnable {
             player.update();
 
             if (keyH.bPressed){
-                this.battle = new Battle(this,null,null);
+                Pokemon playerPokemon = Pokemon.load("25");
+                Pokemon enemyPokemon = Pokemon.load("11");
+
+                this.battle = new Battle(this, playerPokemon, enemyPokemon);
                 this.gameState = stateBattle;
             }
 
@@ -219,7 +223,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void playMusic(int i) {
         music.setFile(i);
-        music.play();
+        // music.play();
         music.loop();
     }
 
