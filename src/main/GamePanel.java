@@ -50,6 +50,7 @@ public class GamePanel extends JPanel implements Runnable {
     public int gameState;
     public final int playState = 1;
     public final int pauseState = 2;
+    public final int dialogueState = 3;
 
     // == POKEDEX & BUTTONS ==
     private boolean isPokedexShown = false;
@@ -148,6 +149,8 @@ public class GamePanel extends JPanel implements Runnable {
         // DEBUG
         long drawStart = System.nanoTime();
 
+
+
         // Background Layer
         tileM.drawLayer(g2, tileM.mapTileNumBackground);
 
@@ -187,6 +190,8 @@ public class GamePanel extends JPanel implements Runnable {
         // UI
         ui.draw(g2);
 
+
+
         // DEBUG
         long passedTime = System.nanoTime() - drawStart;
 
@@ -213,7 +218,7 @@ public class GamePanel extends JPanel implements Runnable {
 //                        "Draw: %.3f ms | Highest: %.3f ms | Average: %.3f ms%n",
 //                        passedMs, highestMs, averageMs
 //                );
-//                System.out.println("xPos: " + ((player.worldX/64)+1) + " yPos: " + ((player.worldY/64)+1));
+               System.out.println("xPos: " + ((player.worldX/64)+1) + " yPos: " + ((player.worldY/64)+1));
                 frameSincePrint = 0;
             }
         }
