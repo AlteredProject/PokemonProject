@@ -34,7 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
     // === SYSTEM ===
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
-    ClickHandler leftClick = new ClickHandler();
+    public ClickHandler leftClick = new ClickHandler();
     Sound music = new Sound();
     Sound sfx = new Sound();
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -78,7 +78,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setupGame() {
         aSetter.setObject();
-        playMusic(0);
+        // playMusic(0);
     }
 
     public void startGameThread() {
@@ -137,7 +137,7 @@ public class GamePanel extends JPanel implements Runnable {
                 battle.update();
             }
 
-            if (keyH.spacePressed){
+            if (keyH.spacePressed && battle != null){
                 battle.endBattle();
             }
         }
@@ -223,7 +223,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void playMusic(int i) {
         music.setFile(i);
-        // music.play();
+        music.play();
         music.loop();
     }
 
