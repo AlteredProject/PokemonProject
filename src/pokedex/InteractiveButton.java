@@ -130,6 +130,12 @@ public class InteractiveButton {
         size = 48;
         g2.drawImage(directionRedLeft, worldX, worldY, size, size, null);
     }
+
+    public void setToFalse(){
+        isSearching = false;
+        isDirectionLeft = false;
+        isDirectionRight = false;
+    }
 }
 
 

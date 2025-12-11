@@ -30,7 +30,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public final int screenWidth = tileSize * maxScreenCol;     // 1024 px
     public final int screenHeight = tileSize * maxScreenRow;    // 768 px
-    private Graphics2D g2;
+
     // === SYSTEM ===
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler(this);
@@ -133,12 +133,11 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
         }
+        //Timer til buttons farveskift i Pokedex
         if (button.drawTimer>0){
             button.drawTimer--;
             if (button.drawTimer == 0){
-                button.isSearching = false;
-                button.isDirectionRight=false;
-                button.isDirectionLeft=false;
+                button.setToFalse();
             }
         }
         if (gameState == pauseState) {
@@ -149,7 +148,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g2 = (Graphics2D) g;
+        Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
         g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -261,9 +260,5 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void switchPokedexStatus() {
         this.isPokedexShown = !this.isPokedexShown;
-    }
-
-    public Graphics2D getG2() {
-        return g2;
     }
 }
