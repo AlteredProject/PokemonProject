@@ -11,6 +11,7 @@ public class NPC_Female1 extends Entity {
         speed = 3;
 
         getNPCImage();
+        setDialogue();
     }
 
     public void getNPCImage() {
@@ -26,5 +27,18 @@ public class NPC_Female1 extends Entity {
         right1 = setup("/npc/female_1/right_1");
         right2 = setup("/npc/female_1/right_2");
         right3 = setup("/npc/female_1/right_3");
+    }
+
+    public void setDialogue() {
+        dialogues[0] = "Hey kid! looks like you don't have a \npokemon";
+        dialogues[1] = "You really shouldn't leave town without \none, its dangerous out there.";
+        dialogues[2] = "Go visit prof. Peter at the laboratory,\nhe will surely give you one!";
+    }
+
+    public void speak() {
+        if (dialogues[dialogueIndex] == dialogues[2]) {
+            gp.player.keyH.ePressed = false;
+        }
+        super.speak();
     }
 }
