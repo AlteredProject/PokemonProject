@@ -1,11 +1,14 @@
 package main;
 
+import pokedex.InteractiveButton;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class ClickHandler implements MouseListener {
     GamePanel gp;
+    InteractiveButton interactiveButton;
     public boolean clicked;
     private int count;
     private int x;
@@ -25,25 +28,51 @@ public class ClickHandler implements MouseListener {
     public void mousePressed(MouseEvent e) {
         this.x = e.getX();
         this.y = e.getY();
+        // Pressed on podexIcon
         if (mousePressedBox(40, 696, 44, 58)) {
-           gp.switchPokedexStatus();
-                if (gp.gameState != gp.pokedexState) {
-                    gp.gameState = gp.pokedexState;
-                } else if (gp.gameState == gp.pokedexState) {
-                    gp.gameState = gp.playState;
-                }
-        }
-
-        if (mousePressedBox(225,575,196,86)){
-            if (gp.gameState == gp.pokedexState) {
-                if (gp.gameState == gp.pokedexState) {
-                    gp.gameState = gp.pokedexSearchState;
-                } else if (gp.gameState == gp.pokedexSearchState) {
-                    gp.gameState = gp.pokedexState;
-                }
+            gp.switchPokedexStatus();
+            if (gp.gameState != gp.pokedexState) {
+                gp.gameState = gp.pokedexState;
+            } else if (gp.gameState == gp.pokedexState) {
+                gp.gameState = gp.playState;
             }
         }
+        // Pressed on Pokedex Search Button
+        if (mousePressedBox(245, 565, 147, 64)) {
+            if (gp.gameState == gp.pokedexState) {
+                gp.button.isSearching = true;
+                gp.button.drawTimer = gp.button.drawDuration;
+                gp.repaint();
 
+                new Thread(() -> {
+                    gp.pokedex.searchForPokemon();
+                }).start();
+            }
+        }
+        //Pressed on Pokedex left button
+        if (mousePressedBox(190, 576, 45, 45)) {
+            if (gp.gameState == gp.pokedexState) {
+                gp.button.isDirectionLeft = true;
+                gp.button.drawTimer = gp.button.drawDuration;
+                gp.repaint();
+
+                new Thread(() -> {
+                    // Søg efter forrige pokemon metode insættes her
+                }).start();
+            }
+        }
+        //Pressed on Pokedex right button
+        if (mousePressedBox(398, 576, 45, 45)) {
+            if (gp.gameState == gp.pokedexState) {
+                gp.button.isDirectionRight = true;
+                gp.button.drawTimer = gp.button.drawDuration;
+                gp.repaint();
+
+                new Thread(() -> {
+                    // Søg efter næste pokemon metode insættes her
+                }).start();
+            }
+        }
     }
 
     @Override

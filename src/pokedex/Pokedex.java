@@ -26,6 +26,7 @@ public class Pokedex {
     GamePanel gp;
     KeyHandler keyH;
     Pokemon pokemon = new Pokemon();
+    InteractiveButton interactiveButton;
 
 
     final int originalPokedexWidth = 256;  // 256*192 px
@@ -54,25 +55,36 @@ public class Pokedex {
         }
     }
 
+    public void drawPokedex(Graphics2D g2) {
+        pokedexGirl(g2);
+
+    }
+
     // Tegner pokedex girl
-    public void drawPokedexGirl(Graphics2D g2) {
+    public void pokedexGirl(Graphics2D g2) {
         BufferedImage image = pokedexGirl;
         g2.drawImage(image, worldX, worldY, pokedexSizeWidth, pokedexSizeHeight, null);
     }
 
     // Tegner pokedex boy
-    public void drawPokedexBoy(Graphics2D g2) {
+    public void pokedexBoy(Graphics2D g2) {
         BufferedImage image = pokedexBoy;
         g2.drawImage(image, worldX, worldY, pokedexSizeWidth, pokedexSizeHeight, null);
     }
 
     // Scanner for input og ser om filen findes lokalt eller skal loades fra API
     public void searchForPokemon() {
+        gp.gameState = gp.pokedexSearchState;
         scanForInput();
 
         pokemon.pokedexLoad();
 
         path = pokemon.getPath();
+        if (path == null) { // If statement kan fjernes, når det funker.
+            System.err.println("Search failed or path could not be determined. Returning to Pokedex state.");
+            gp.gameState = gp.pokedexState;
+            return;
+        }
         File outputFile = new File(path);
         if (outputFile.exists()) {
             loadPokemonCache();
@@ -81,12 +93,13 @@ public class Pokedex {
             System.out.println("loaded from api");
             loadPokemonToPokedex();
         }
+        gp.gameState = gp.pokedexState;
     }
 
     // Tegner pokemon PNG fra enten cache eller API
     public void drawPokedexSprite(Graphics2D g2) {
         if (pokemonSprite != null) {
-            g2.drawImage(pokemonSprite, pokemonX, pokemonY, pokemonSize, pokemonSize, null);
+            g2.drawImage(pokemonSprite, pokemonX, pokemonY, pokemonSize * 2, pokemonSize * 2, null);
         }
     }
 

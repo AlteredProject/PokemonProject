@@ -3,8 +3,9 @@ package main;
 import entity.Entity;
 import entity.Player;
 import object.SuperObject;
-import pokedex.InteractiveBotton;
+import pokedex.InteractiveButton;
 import pokedex.Pokedex;
+import pokedex.PokedexDatabase;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -29,7 +30,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public final int screenWidth = tileSize * maxScreenCol;     // 1024 px
     public final int screenHeight = tileSize * maxScreenRow;    // 768 px
-
+    private Graphics2D g2;
     // === SYSTEM ===
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler(this);
@@ -55,16 +56,16 @@ public class GamePanel extends JPanel implements Runnable {
 
     // == POKEDEX & BUTTONS ==
     private boolean isPokedexShown = false;
-    public InteractiveBotton button = new InteractiveBotton(this, keyH, leftClick);
+    public InteractiveButton button = new InteractiveButton(this, keyH, leftClick);
     public Pokedex pokedex = new Pokedex(this, keyH);
 
     // === WORLD SETTINGS ===
     public final int maxWorldCol = 100;
     public final int maxWorldRow = 100;
 
-    Sound music = new Sound(this,player);
-    public Sound collisionSound = new Sound(this,player);
-    public Sound buttonSound = new Sound(this,player);
+    Sound music = new Sound(this, player);
+    public Sound collisionSound = new Sound(this, player);
+    public Sound buttonSound = new Sound(this, player);
 
     // === FPS ===
     int FPS = 60;
@@ -126,10 +127,18 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == playState) {
             player.update();
             music.updateMusic();
-            for(int i = 0; i < npc.length; i++) {
-                if(npc[i] != null) {
+            for (int i = 0; i < npc.length; i++) {
+                if (npc[i] != null) {
                     npc[i].update();
                 }
+            }
+        }
+        if (button.drawTimer>0){
+            button.drawTimer--;
+            if (button.drawTimer == 0){
+                button.isSearching = false;
+                button.isDirectionRight=false;
+                button.isDirectionLeft=false;
             }
         }
         if (gameState == pauseState) {
@@ -140,7 +149,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics2D g2 = (Graphics2D) g;
+        g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
         g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
@@ -163,8 +172,8 @@ public class GamePanel extends JPanel implements Runnable {
         tileM.drawLayer(g2, tileM.mapTileNumEnvironmentB);
 
         // NPCs
-        for(int i = 0; i < npc.length; i++) {
-            if(npc[i] != null) {
+        for (int i = 0; i < npc.length; i++) {
+            if (npc[i] != null) {
                 npc[i].draw(g2);
             }
         }
@@ -180,17 +189,18 @@ public class GamePanel extends JPanel implements Runnable {
 
         //Pokedex
         if (isPokedexShown) {
-            pokedex.drawPokedexGirl(g2);
-            button.drawpokedexSearchButton(g2);
-            gameState = pokedexState;
+            pokedex.drawPokedex(g2);
+            button.drawSearchButton(g2);
+            button.drawDirectionRight(g2);
+            button.drawDirectionLeft(g2);
+            if (gameState != pokedexSearchState) {
+                gameState = pokedexState;
+            }
         } else {
             gameState = playState;
         }
-        if(gameState == pokedexSearchState){
-            pokedex.searchForPokemon();
-            gameState=pokedexState;
-        }
-        if (gameState == pokedexState || gameState ==pokedexSearchState){
+
+        if (gameState == pokedexState || gameState == pokedexSearchState) {
             pokedex.drawPokedexSprite(g2);
         }
 
@@ -251,5 +261,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void switchPokedexStatus() {
         this.isPokedexShown = !this.isPokedexShown;
+    }
+
+    public Graphics2D getG2() {
+        return g2;
     }
 }
