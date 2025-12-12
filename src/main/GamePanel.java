@@ -1,6 +1,7 @@
 package main;
 
 import battleSystem.Battle;
+import entity.Entity;
 import entity.Player;
 import object.SuperObject;
 import pokedex.InteractiveBotton;
@@ -33,26 +34,28 @@ public class GamePanel extends JPanel implements Runnable {
 
     // === SYSTEM ===
     TileManager tileM = new TileManager(this);
-    KeyHandler keyH = new KeyHandler();
-    public ClickHandler leftClick = new ClickHandler();
-    Sound music = new Sound();
-    Sound sfx = new Sound();
+    KeyHandler keyH = new KeyHandler(this);
+    ClickHandler leftClick = new ClickHandler(this);
+
+    //Sound sfx = new Sound();
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
+    public UI ui = new UI(this);
     Thread gameThread;
 
-    // === GAME STATE ===
-    public static final int statePlay = 0;
-    public static final int statePause = 1;
-    public static final int stateBattle = 2;
-
-    public int gameState = statePlay;
-
-    // == ENTITY & PLAYER ===
+    // == ENTITY & OBJECT ===
     public Player player = new Player(this, keyH);
     public SuperObject[] obj = new SuperObject[10];
+    public Entity[] npc = new Entity[10];
 
-    // == POKEDEX & BUTTONS
+    // == GAME STATE ==
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
+    public final int dialogueState = 3;
+
+    // == POKEDEX & BUTTONS ==
+    private boolean isPokedexShown = false;
     public InteractiveBotton button = new InteractiveBotton(this, keyH, leftClick);
     public Pokedex pokedex = new Pokedex(this, keyH);
 
@@ -62,6 +65,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     // === BATTLE SYSTEM ===
     public Battle battle;
+
+    Sound music = new Sound(this,player);
+    public Sound collisionSound = new Sound(this,player);
+    public Sound buttonSound = new Sound(this,player);
 
     // === FPS ===
     int FPS = 60;
@@ -77,8 +84,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void setupGame() {
+        playMusic();
         aSetter.setObject();
-        // playMusic(0);
+        aSetter.setNPC();
+        gameState = playState;
     }
 
     public void startGameThread() {
@@ -118,10 +127,15 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     public void update() {
-
-        if (gameState == statePlay) {
-            // Normal Overworld
+        if (gameState == playState) {
             player.update();
+            music.updateMusic();
+            music.updateFade();
+            for(int i = 0; i < npc.length; i++) {
+                if(npc[i] != null) {
+                    npc[i].update();
+                }
+            }
 
             if (keyH.bPressed){
                 Pokemon playerPokemon = Pokemon.load("25");
@@ -130,8 +144,12 @@ public class GamePanel extends JPanel implements Runnable {
                 this.battle = new Battle(this, playerPokemon, enemyPokemon);
                 this.gameState = stateBattle;
             }
+        }
+        if (gameState == pauseState) {
 
-        } else if (gameState == stateBattle){
+        }
+
+        if (gameState == battleState){
             // Battle screen
             if (battle != null){
                 battle.update();
@@ -155,25 +173,47 @@ public class GamePanel extends JPanel implements Runnable {
         // DEBUG
         long drawStart = System.nanoTime();
 
-        if (gameState == statePlay) {
-            tileM.drawLayer(g2, tileM.mapTileNumBackground);
-            for (int i = 0; i < obj.length; i++) {
-                if (obj[i] != null) {
-                    obj[i].draw(g2, this);
-                }
-            }
-            tileM.drawLayer(g2, tileM.mapTileNumEnvironmentB);
-            player.draw(g2);
-            tileM.drawLayer(g2, tileM.mapTileNumEnvironmentF);
 
-            //Pokedex Icon
-            button.drawpokedexIcon(g2);
+        if (gameState == playState){
+        // Background Layer
+        tileM.drawLayer(g2, tileM.mapTileNumBackground);
 
-            //Pokedex
-            if (keyH.pPressed ||leftClick.clicked && leftClick.mousePressedBox(40, 696, 44, 58) && leftClick.getCount() == 1) {
-                    pokedex.draw(g2);
-                    button.drawpokedexButtons(g2);
+        // Object Layer
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
+                obj[i].draw(g2, this);
             }
+        }
+
+        // Environment Behind player
+        tileM.drawLayer(g2, tileM.mapTileNumEnvironmentB);
+
+        // NPCs
+        for(int i = 0; i < npc.length; i++) {
+            if(npc[i] != null) {
+                npc[i].draw(g2);
+            }
+        }
+
+        // Player
+        player.draw(g2);
+
+        // Environment Front of player
+        tileM.drawLayer(g2, tileM.mapTileNumEnvironmentF);
+
+        //Pokedex Icon
+        button.drawpokedexIcon(g2);
+
+        //Pokedex
+        if (isPokedexShown) {
+            pokedex.drawPokedexGirl(g2);
+            button.drawpokedexButtons(g2);
+            pokedex.drawPokedexSprite(g2,225,300, 96,96);
+        }
+
+        // UI
+        ui.draw(g2);
+
         } else if (gameState == stateBattle){
             if (battle != null){
                 battle.draw(g2);
@@ -183,7 +223,6 @@ public class GamePanel extends JPanel implements Runnable {
 
                 // probably gonna need to use the g2.draw... function like g2.drawImage();
             }
-        }
 
 
         // DEBUG
@@ -208,11 +247,11 @@ public class GamePanel extends JPanel implements Runnable {
             frameSincePrint++;
             int printInterval = 30;
             if (frameSincePrint >= printInterval) {
-                System.out.printf(
-                        "Draw: %.3f ms | Highest: %.3f ms | Average: %.3f ms%n",
-                        passedMs, highestMs, averageMs
-                );
-                System.out.println("xPos: " + player.worldX/64 + " yPos: " + player.worldY/64);
+//                System.out.printf(
+//                        "Draw: %.3f ms | Highest: %.3f ms | Average: %.3f ms%n",
+//                        passedMs, highestMs, averageMs
+//                );
+               System.out.println("xPos: " + ((player.worldX/64)+1) + " yPos: " + ((player.worldY/64)+1));
                 frameSincePrint = 0;
             }
         }
@@ -221,18 +260,24 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
 
-    public void playMusic(int i) {
-        music.setFile(i);
+    public void playMusic() {
+        music.setFile();
         music.play();
-        music.loop();
+
     }
 
     public void stopMusic() {
         music.stop();
     }
 
-    public void playSFX(int i) {
-        sfx.setFile(i);
+    /*public void playSFX(int i) {
+        sfx.setFile();
         sfx.play();
+    }
+
+     */
+
+    public void switchPokedexStatus() {
+        this.isPokedexShown = !this.isPokedexShown;
     }
 }

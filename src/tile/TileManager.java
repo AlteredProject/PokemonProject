@@ -21,7 +21,7 @@ public class TileManager {
     public TileManager(GamePanel gp) {
         this.gp = gp;
 
-        tile = new Tile[333];
+        tile = new Tile[338];
         mapTileNumBackground = new int[gp.maxWorldCol][gp.maxWorldRow];
         mapTileNumEnvironmentB = new int[gp.maxWorldCol][gp.maxWorldRow];
         mapTileNumEnvironmentF = new int[gp.maxWorldCol][gp.maxWorldRow];
@@ -44,10 +44,10 @@ public class TileManager {
           252, 254, 257, 258, 259, 260, 261, 262, 264, 265, 270, 273, 274, 275, 276, 277, 278,
           284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 301, 302, 304,
           305, 306, 310, 311, 312, 313, 314, 315, 316, 319, 320, 321, 322, 323, 324, 326, 327,
-          328, 329, 330, 331, 332
+          328, 329, 330, 331, 332, 333, 335
         );
 
-        for (int i = 0; i <= 332; i++) {
+        for (int i = 0; i <= 337; i++) {
             String fileName = String.format("tile%03d", i);
             boolean hasCollision = collisionTiles.contains(i);
             setup(i, fileName, hasCollision);
