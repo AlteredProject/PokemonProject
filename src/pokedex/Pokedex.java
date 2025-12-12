@@ -22,16 +22,11 @@ public class Pokedex {
     private String name;
     private String path;
     private BufferedImage pokedexBoy, pokedexGirl, pokemonSprite;
-
-    GamePanel gp;
+    private GamePanel gp;
+    Graphics2D g2;
     KeyHandler keyH;
     Pokemon pokemon = new Pokemon();
 
-    final int originalPokedexWidth = 256;  // 256*192 px
-    final int originalPokedexHeight = 192;
-
-    public final int pokedexSizeWidth = originalPokedexWidth * 4; // 1024*768 px
-    public final int pokedexSizeHeight = originalPokedexHeight * 4;
     private BufferedImage pokedexCache;
 
     // Constructor
@@ -39,36 +34,31 @@ public class Pokedex {
         this.gp = gp;
         this.keyH = keyH;
 
-        getPlayerImage();
+
     }
 
-    // Loader pokedex images
-    public void getPlayerImage() {
-
-        try {
-            pokedexBoy = ImageIO.read(getClass().getResourceAsStream("/pokedexSprites/boy.png"));
-            pokedexGirl = ImageIO.read(getClass().getResourceAsStream("/pokedexSprites/girl.png"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public void draw(Graphics2D g2) {
+        this.g2 = g2;
+        g2.setFont(gp.ui.pkmnFont);
+        if (gp.gameState == gp.playState) {
         }
+        if (gp.gameState == gp.pauseState){
+
+        }
+
+
+
+//        if (gp.gameState == gp.pokedexState || gp.gameState == gp.pokedexSearchState) {
+//            gp.pokedex.drawPokedexSprite(g2);
+//        }
+//        button.drawSearchButton(g2);
+//            button.drawDirectionRight(g2);
+//            button.drawDirectionLeft(g2);
     }
 
-    public void drawPokedex(Graphics2D g2) {
-        pokedexGirl(g2);
 
-    }
 
-    // Tegner pokedex girl
-    public void pokedexGirl(Graphics2D g2) {
-        BufferedImage image = pokedexGirl;
-        g2.drawImage(image, worldX, worldY, pokedexSizeWidth, pokedexSizeHeight, null);
-    }
 
-    // Tegner pokedex boy
-    public void pokedexBoy(Graphics2D g2) {
-        BufferedImage image = pokedexBoy;
-        g2.drawImage(image, worldX, worldY, pokedexSizeWidth, pokedexSizeHeight, null);
-    }
 
     // Scanner for input og ser om filen findes lokalt eller skal loades fra API
     public void searchForPokemon() {
@@ -126,6 +116,7 @@ public class Pokedex {
         pokemonSprite = pokedexCache;
     }
 
+    // Scanner for input fra bruger
     public void scanForInput() {
         Scanner sc = new Scanner(System.in);
         System.out.println("=========================================");
@@ -138,6 +129,7 @@ public class Pokedex {
         } catch (NumberFormatException _) {
         }
     }
+
     private String cachePath() {
         return "src/resources/pokedexPngCache/pokemon_name_" + pokemon.name + ".png";
     }
