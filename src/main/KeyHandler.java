@@ -86,8 +86,5 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_SHIFT) {
             shiftPressed = false;
         }
-        if (code == KeyEvent.VK_E) {
-            ePressed = false;
-        }
     }
 }
