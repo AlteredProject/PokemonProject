@@ -26,7 +26,7 @@ public class ClickHandler implements MouseListener {
         this.x = e.getX();
         this.y = e.getY();
         // Pressed on podexIcon
-        if (mousePressedBox(40, 696, 44, 58)) {
+        if (mousePressedBox(40, 696, 44, 58)&& gp.gameState == gp.playState) {
             gp.switchPokedexStatus();
             if (gp.gameState != gp.pokedexState) {
                 gp.gameState = gp.pokedexState;
@@ -69,6 +69,11 @@ public class ClickHandler implements MouseListener {
                     // Søg efter næste pokemon metode insættes her
                 }).start();
             }
+        }
+        if (mousePressedBox((gp.screenWidth - (254 * 4)) / 2, gp.screenHeight - (46 * 4) - (gp.tileSize / 8), 254*4, 46*4) && gp.gameState == gp.dialogueState) {
+            gp.keyH.enterPressed = true;
+            gp.buttonSound.playButtonSound();
+            gp.gameState = gp.playState;
         }
     }
 
