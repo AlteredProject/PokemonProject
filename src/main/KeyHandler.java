@@ -39,7 +39,7 @@ public class KeyHandler implements KeyListener{
                 ePressed = true;
             }
             if(code == KeyEvent.VK_P) {
-                gp.switchPokedexStatus();
+                gp.gameState = gp.pokedexState;
             }
 
             if(code == KeyEvent.VK_SHIFT) {
@@ -62,6 +62,16 @@ public class KeyHandler implements KeyListener{
             if (code == KeyEvent.VK_ENTER){
                 enterPressed = true;
                 gp.buttonSound.playButtonSound();
+                gp.gameState = gp.playState;
+            }
+        }
+
+        // POKEDEX STATE
+        else if (gp.gameState == gp.pokedexState) {
+            if(code == KeyEvent.VK_P) {
+                gp.gameState = gp.playState;
+            }
+            if(code == KeyEvent.VK_ESCAPE) {
                 gp.gameState = gp.playState;
             }
         }

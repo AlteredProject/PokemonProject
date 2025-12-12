@@ -3,7 +3,6 @@ package main;
 import entity.Entity;
 import entity.Player;
 import object.SuperObject;
-import pokedex.InteractiveBotton;
 import pokedex.Pokedex;
 import tile.TileManager;
 
@@ -33,12 +32,10 @@ public class GamePanel extends JPanel implements Runnable {
     // === SYSTEM ===
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler(this);
-    ClickHandler leftClick = new ClickHandler(this);
-
-    //Sound sfx = new Sound();
+    ClickHandler clickH = new ClickHandler(this);
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
-    public UI ui = new UI(this);
+    public UI ui = new UI(this, clickH);
     Thread gameThread;
 
     // == ENTITY & OBJECT ===
@@ -51,16 +48,18 @@ public class GamePanel extends JPanel implements Runnable {
     public final int playState = 1;
     public final int pauseState = 2;
     public final int dialogueState = 3;
+    public final int pokedexState = 4;
+    public final int pokedexSearchState = 5;
 
     // == POKEDEX & BUTTONS ==
-    private boolean isPokedexShown = false;
-    public InteractiveBotton button = new InteractiveBotton(this, keyH, leftClick);
+    public boolean isPokedexShown = false;
     public Pokedex pokedex = new Pokedex(this, keyH);
 
     // === WORLD SETTINGS ===
     public final int maxWorldCol = 100;
     public final int maxWorldRow = 100;
 
+    // === SOUND ===
     Sound music = new Sound(this,player);
     public Sound collisionSound = new Sound(this,player);
     public Sound buttonSound = new Sound(this,player);
@@ -74,7 +73,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setBackground(new java.awt.Color(120, 192, 248));
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
-        this.addMouseListener(leftClick);
+        this.addMouseListener(clickH);
         this.setFocusable(true);
     }
 
@@ -177,15 +176,8 @@ public class GamePanel extends JPanel implements Runnable {
         // Environment Front of player
         tileM.drawLayer(g2, tileM.mapTileNumEnvironmentF);
 
-        //Pokedex Icon
-        button.drawpokedexIcon(g2);
-
         //Pokedex
-        if (isPokedexShown) {
-            pokedex.drawPokedexGirl(g2);
-            button.drawpokedexButtons(g2);
-            pokedex.drawPokedexSprite(g2,225,300, 96,96);
-        }
+        pokedex.draw(g2);
 
         // UI
         ui.draw(g2);
@@ -218,7 +210,7 @@ public class GamePanel extends JPanel implements Runnable {
 //                        "Draw: %.3f ms | Highest: %.3f ms | Average: %.3f ms%n",
 //                        passedMs, highestMs, averageMs
 //                );
-               System.out.println("xPos: " + ((player.worldX/64)+1) + " yPos: " + ((player.worldY/64)+1));
+//                System.out.println("xPos: " + ((player.worldX/64)+1) + " yPos: " + ((player.worldY/64)+1));
                 frameSincePrint = 0;
             }
         }

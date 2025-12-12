@@ -13,7 +13,6 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Scanner;
 
 public class Pokemon {
 
@@ -27,31 +26,25 @@ public class Pokemon {
     public EntryStats[] stats;
     public boolean validPokemon = true;
     private String pokemonSprite;
+    private String path;
+    private PokedexDatabase pokedexDatabase = new PokedexDatabase();
 
+    public void pokedexLoad() {
+        String expectedPath = cachePath();
 
-    public void pokedexLoad(){
-
-        Scanner sc = new Scanner(System.in);
-        System.out.println("=========================================");
-        System.out.println("Welcome to the international pokédex database");
-        System.out.print("Please enter pokemon name: ");
-        this.name = sc.nextLine().toLowerCase();
-
-        File outputFile = new File("src/resources/pokedexPngCache/" + "pokemon_id_" + this.name + ".png");
-
-        if (outputFile.exists()) {
-            System.out.println("Already exist");
-        } else {
-            pokedexEntry();
+        if (PokedexDatabase.getPokemonByName(this)||PokedexDatabase.getPokemonById(this,name)) { // <- Attempts to fill basic data (id, height, weight)
+            System.out.println("Data loaded from SQLite cache.");
+            path = expectedPath;
+            return;
         }
+        // Hvis ikke i database, hent fra API
+        pokedexEntry();
     }
 
     public void pokedexEntry() {
 
         try {
-            while (validPokemon) {
-
-
+            System.out.println("loading pokemon info from API");
                 String url = "https://pokeapi.co/api/v2/pokemon/" + this.name;
 
                 // søg efter pokemon
@@ -67,14 +60,23 @@ public class Pokemon {
                 // If pokemon does not exist
                 if (response1.statusCode() == 404) {
                     System.out.println("ERROR: The pokemon " + "'" + this.name + "'" + " can not be found. Please try again.\n");
-                    continue; // hop tilbage og spørg igen
+                    path = null;
+
                 }
                 Gson gson = new Gson();
                 Pokemon p = gson.fromJson(response1.body(), Pokemon.class);
 
-                p.printInfo();
-                break;
-            }
+                this.name = p.name;
+                this.id = p.id;
+                this.height = p.height;
+                this.weight = p.weight;
+                this.types = p.types;
+                this.sprites = p.sprites;
+                this.stats = p.stats;
+
+                this.printInfoFromApi();
+
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
@@ -83,7 +85,7 @@ public class Pokemon {
 
     }
 
-    public void printInfo() throws IOException, InterruptedException {
+    public void printInfoFromApi() throws IOException, InterruptedException {
         double kg = this.weight * 0.1;
         double mtr = this.height * 0.1;
 
@@ -107,7 +109,6 @@ public class Pokemon {
             printAligned(String.valueOf(stat.stat.name.toUpperCase()), String.valueOf(stat.base_stat));
 
         }
-        String path = "src/resources/pokedexPngCache/pokemon_id_" + this.id + ".png";
 
         pokemonSprite = this.sprites.front_default;
         System.out.println();
@@ -117,8 +118,11 @@ public class Pokemon {
         printAligned("Sprite URL", this.sprites.front_default);
         System.out.println("=========================================");
 
-        pngCache();
+        path = cachePath();
+        // Gemmer alt information til databasen, uden PNG
+        PokedexDatabase.insertPokemon(this, description);
 
+        pngCache();
     }
 
     public void printAligned(String label, String value) {
@@ -154,7 +158,7 @@ public class Pokemon {
                 return;
             }
             try {
-                File outputFile = new File("src/resources/pokedexPngCache/" + "pokemon_id_" + this.id + ".png");
+                File outputFile = new File(cachePath());
                 boolean success = ImageIO.write(pokemonPng, "png", outputFile);
                 if (success) {
                     System.out.println("Billedet blev gemt korrekt som: " + outputFile.getAbsolutePath());
@@ -191,6 +195,21 @@ public class Pokemon {
         }
     }
 
+    private String cachePath() {
+        return "src/resources/pokedexPngCache/pokemon_name_" + this.name + ".png";
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }
 
 
