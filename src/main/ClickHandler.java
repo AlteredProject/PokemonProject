@@ -42,7 +42,6 @@ public class ClickHandler implements MouseListener {
         //Pressed on Pokedex left button
         if (mousePressedBox(190, 576, 45, 45)) {
             if (gp.gameState == gp.pokedexState) {
-                System.out.println("=== LEFT BUTTON PRESSED ===");
                 previousButtonPressed = true;
             }
         }
@@ -61,7 +60,6 @@ public class ClickHandler implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        System.out.println("=== RELEASED MOUSE ===");
         previousButtonPressed = false;
         searchButtonPressed = false;
         nextButtonPressed = false;
