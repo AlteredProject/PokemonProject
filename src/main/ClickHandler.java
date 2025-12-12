@@ -6,7 +6,7 @@ import java.awt.event.MouseListener;
 
 public class ClickHandler implements MouseListener {
     GamePanel gp;
-    public boolean clicked;
+    public boolean clicked = false;
     private int count;
     private int x;
     private int y;
@@ -18,13 +18,14 @@ public class ClickHandler implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
 
-
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         this.x = e.getX();
         this.y = e.getY();
+        this.clicked = true;
+
         if (mousePressedBox(40, 696, 44, 58) && gp.gameState == gp.playState) {
            gp.switchPokedexStatus();
         }
@@ -37,7 +38,7 @@ public class ClickHandler implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        this.clicked = false;
     }
 
     @Override
