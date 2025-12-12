@@ -79,6 +79,7 @@ public class UI {
         if (gp.gameState == gp.dialogueState) {
             drawDialogueScreen();
         }
+
         // POKEDEX STATE
         if (gp.gameState == gp.pokedexState) {
             drawPokedexScreen();
@@ -151,11 +152,10 @@ public class UI {
         int height = 64;
         int size = 48;
         int sButtonX = 245;
+
         if (clickH.previousButtonPressed) {
-            System.out.println("DRAWING PRESSED BUTTON");
             g2.drawImage(previousButtonPressed, pButtonX, buttonY, size, size, null);
         } else {
-
             g2.drawImage(previousButtonReleased, pButtonX, buttonY, size, size, null);
         }
 
@@ -164,6 +164,7 @@ public class UI {
         } else {
             g2.drawImage(searchButtonReleased, sButtonX, buttonY - 11, width, height, null);
         }
+
         if (clickH.nextButtonPressed) {
             g2.drawImage(nextButtonPressed, nButtonX, buttonY, size, size, null);
         } else {
