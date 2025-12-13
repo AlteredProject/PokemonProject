@@ -47,6 +47,7 @@ public void search(){
         } else {
             System.out.println("loaded from api");
             this.pokemonSprite = null;
+            loadPokemonToPokedex();
         }
     }
 
