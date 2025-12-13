@@ -32,7 +32,7 @@ public class NPC_Female2 extends Entity {
     public void setDialogue() {
         dialogues[0] = "Such a lovely weather outside today \ndon't you think?";
         dialogues[1] = "My husband went to the beach \non route 202 to fish for Magikarp";
-        dialogues[2] = "But he has forgotten his fishing rod \n here at home";
+        dialogues[2] = "But he has forgotten his fishing rod \nhere at home";
         dialogues[3] = "What should we eat for dinner then?";
     }
 

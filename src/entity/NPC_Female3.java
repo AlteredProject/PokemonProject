@@ -30,7 +30,7 @@ public class NPC_Female3 extends Entity {
     }
 
     public void setDialogue() {
-        dialogues[0] = "Oh hello there young one, have you come \nto see my pretty flowers?";
+        dialogues[0] = "Oh hello there dear, have you come \nto see my pretty flowers?";
         dialogues[1] = "I've been growing them for as long \nas i can remember.";
         dialogues[2] = "You're welcome to look around, \nbut please don't tramble any of them.";
     }

@@ -30,9 +30,9 @@ public class NPC_Male6 extends Entity {
     }
 
     public void setDialogue() {
-        dialogues[0] = "It is such a lovely day to go catch \nsome Magikarp";
-        dialogues[1] = "But of course i went and forgot my \nfishing rod at home";
-        dialogues[2] = "My wife is gonna be so mad when i \ncome home without dinner..";
+        dialogues[0] = "It is such a lovely day to catch some \nMagikarp for dinner i thought.";
+        dialogues[1] = "But of course i went and forgot my \nfishing rod at home..";
+        dialogues[2] = "My wife is gonna be so mad when i \ncome home without dinner...";
     }
 
     public void speak() {
