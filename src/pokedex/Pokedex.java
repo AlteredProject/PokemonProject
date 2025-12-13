@@ -15,30 +15,48 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class Pokedex {
+    private final Object searchLock = new Object();
     public int worldX, worldY = 0;
-
     private String name;
     private String path;
+    private volatile boolean isSearching = false;
     public BufferedImage pokemonSprite;
     private GamePanel gp;
     Graphics2D g2;
     KeyHandler keyH;
-    Pokemon pokemon = new Pokemon();
-
+    Pokemon pokemon;
     private BufferedImage pokedexCache;
 
+
+
     // Constructor
-    public Pokedex(GamePanel gp, KeyHandler keyH) {
+    public Pokedex(GamePanel gp, KeyHandler keyH, Pokemon pokemon) {
         this.gp = gp;
         this.keyH = keyH;
+        this.pokemon = pokemon;
     }
 public void search(){
-    scanForInput();
-    searchForPokemon();
+    if (isSearching) {
+        return;
+    }
+    Thread searchThread = new Thread(() -> {
+        try {
+            isSearching = true;
+            System.out.println("DEBUG: Search Thread Started.");
+            scanForInput();
+            searchForPokemon();
+        } finally {
+            isSearching = false;
+            System.out.println("DEBUG: Search Thread Finished.");
+            if (gp != null) {
+                gp.repaint();
+            }
+        }
+    });
+    searchThread.start();
 }
     // Scanner for input og ser om filen findes lokalt eller skal loades fra API
     public void searchForPokemon() {
-
         pokemon.pokedexLoad();
         path = cachePath();
         if (path != null) {
@@ -96,6 +114,10 @@ public void search(){
 
     private String cachePath() {
         return "src/resources/pokedexPngCache/pokemon_name_" + pokemon.name + ".png";
+    }
+
+    public boolean isSearching() {
+        return isSearching;
     }
 }
 

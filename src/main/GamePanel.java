@@ -34,13 +34,13 @@ public class GamePanel extends JPanel implements Runnable {
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler(this);
     ClickHandler clickH = new ClickHandler(this);
-    Pokemon pokemon = new Pokemon();
-    Pokedex pokedex = new Pokedex(this, keyH);
+    Pokemon originalPokemon = new Pokemon();
+    Pokedex pokedex = new Pokedex(this, keyH, originalPokemon);
 
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
 
-    public UI ui = new UI(this, clickH, pokemon, pokedex);
+    public UI ui = new UI(this, clickH, originalPokemon, pokedex);
     Thread gameThread;
 
     // == ENTITY & OBJECT ===

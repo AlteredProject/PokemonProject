@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class UI {
     GamePanel gp;
     Graphics2D g2;
-    Pokemon pokemon = new Pokemon();
+    Pokemon pokemon;
     Pokedex pokedex;
     ClickHandler clickH = new ClickHandler(gp);
     UtilityTool uTool = new UtilityTool();
@@ -20,6 +20,7 @@ public class UI {
 
     public Font pkmnFont;
     public boolean messageOn = false;
+    private boolean showPokedexStartText = true;
     private int stage = 0;
     public String message = "";
     int messageCounter = 0;
@@ -142,11 +143,22 @@ public class UI {
         drawButtons();
 
         // INFO
-        if (pokemon.name != null || pokemon.getTypes() != null) {
-            drawPokemonInfo();
+        if (pokemon.name != null) {
+            showPokedexStartText = false;
             drawPokemonSprite();
-            System.out.println("Goes in here");
+            drawPokemonInfo();
         }
+        if (showPokedexStartText) {
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 12));
+            g2.setColor(Color.black);
+            g2.drawString("PÓKEDEX", 695, 396);
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 8));
+            g2.drawString("Welcome to the International", 655, 376);
+            g2.drawString("Search for a Pokémon by", 667, 450
+            );
+            g2.drawString("name or number", 697, 465);
+        }
+
     }
 
     public void drawPokedex(int x, int y, BufferedImage image, int genderState) {
@@ -189,33 +201,39 @@ public class UI {
 
     // Revised UI.drawPokemonInfo()
     public void drawPokemonInfo() {
-        int x = gp.tileSize - 5;
-        int y = gp.tileSize + 30; // Start a little lower for better spacing
-        final int lineSpace = 28; // Standard spacing between lines
+        int x = 625;
+        int y = 345; // Start a little lower for better spacing
+        final int lineSpace = 15; // Standard spacing between lines
 
-        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 22));
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 7));
         g2.setColor(Color.black);
+        if (pokedex.isSearching()) {
+            g2.drawString("Enter name or number", 680, 395);
+            return;
+        }
 
         // --- CRITICAL CHECK: Ensure data is loaded to prevent crash ---
         if (pokemon.getName() == null || pokemon.getId() == 0 || pokemon.getTypes() == null) {
-            g2.drawString("Searching or No Pokémon Found...", x, y);
+            g2.drawString("No Pokémon Found...Try again!", 655, 395);
             return; // Stop drawing incomplete data
         }
 
-        // Base info - MUST INCREMENT Y
-        g2.drawString("POKEMON ID" + " #" + pokemon.getId(), x, y);
-        y += lineSpace;
+        // #id and Name
+        int xName = getXForCenteredTextAt(pokemon.getName(), 720);
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 12));
+        g2.drawString(pokemon.getName().toUpperCase(), xName, 675);
 
-        g2.drawString("NAME " + pokemon.getName().toUpperCase(), x, y);
+        // Base info - MUST INCREMENT Y
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 10));
+        g2.drawString("NUMBER #" + pokemon.getId(), x, y);
         y += lineSpace;
 
         g2.drawString("HEIGHT " + String.format("%.1f", pokemon.getHeight() * 0.1) + " M", x, y);
         y += lineSpace;
 
         g2.drawString("WEIGHT " + String.format("%.1f", pokemon.getWeight() * 0.1) + " KG", x, y);
-        y += 50; // Extra space before types
+        y += 15; // Extra space before types
 
-        // Pokémon Type (Guaranteed non-null by the initial check)
         int typeCounter = 1;
         for (TypeEntry entry : pokemon.getTypes()) {
             g2.drawString("TYPE " + typeCounter + ": " + entry.type.name.toUpperCase(), x, y);
@@ -223,7 +241,7 @@ public class UI {
             typeCounter++;
         }
 
-        y += 20; // Extra space before stats
+        y += 15; // Extra space before stats
 
         // Pokemon Stats (Need an additional null check if the array could somehow be null here)
         if (pokemon.getStats() != null) {
@@ -232,25 +250,76 @@ public class UI {
                 y += lineSpace;
             }
         }
-
-        // Description - REQUIRES WORD WRAPPING for display, but here is a basic line:
+        y += lineSpace;
         String description = PokemonDescription.getDescription(pokemon.getName());
-        g2.drawString("DESCRIPTION: " + description.substring(0, Math.min(description.length(), 60)) + "...", x, y);
+        g2.drawString("DESCRIPTION: ", x, y);
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 10));
+        y += lineSpace;
+        drawWrappedText(g2, description, x, y, 250, 15);
+
+
     }
 
     public void drawPokemonSprite() {
         int pokemonX = 225;
         int pokemonY = 300;
         int pokemonSize = 96;
+
         if (pokedex.pokemonSprite != null) {
-            System.out.println("sprite not null");
             g2.drawImage(pokedex.pokemonSprite, pokemonX, pokemonY, pokemonSize * 2, pokemonSize * 2, null);
         }
-        System.out.println("sprite null");
     }
 
     public int getXForCenteredText(String text) {
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         return gp.screenWidth / 2 - length / 2;
+    }
+
+    public int getXForCenteredTextAt(String text, int targetCenterX) {
+        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+        return targetCenterX - length / 2;
+    }
+    // Inside main/UI.java
+
+// ... existing methods ...
+
+    /**
+     * Draws text that automatically wraps to a new line when it exceeds maxLineWidth.
+     *
+     * @param g2           The Graphics2D context.
+     * @param text         The string to be drawn.
+     * @param startX       The starting X-coordinate for the text block.
+     * @param startY       The starting Y-coordinate for the text block.
+     * @param maxLineWidth The maximum width in pixels before a line break occurs.
+     * @param lineSpacing  The vertical spacing between lines in pixels.
+     * @return The final Y-coordinate after drawing all the text.
+     */
+    public int drawWrappedText(Graphics2D g2, String text, int startX, int startY, int maxLineWidth, int lineSpacing) {
+        FontMetrics fm = g2.getFontMetrics();
+        String[] words = text.split(" ");
+        String currentLine = "";
+        int y = startY;
+
+        for (String word : words) {
+            String potentialLine = currentLine.isEmpty() ? word : currentLine + " " + word;
+            int potentialWidth = fm.stringWidth(potentialLine);
+
+            if (potentialWidth <= maxLineWidth) {
+                currentLine = potentialLine;
+            } else {
+                if (!currentLine.isEmpty()) {
+                    g2.drawString(currentLine, startX, y);
+                    y += lineSpacing;
+                }
+                currentLine = word;
+            }
+        }
+
+        if (!currentLine.isEmpty()) {
+            g2.drawString(currentLine, startX, y);
+            y += lineSpacing;
+        }
+
+        return y;
     }
 }

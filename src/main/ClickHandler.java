@@ -62,8 +62,8 @@ public class ClickHandler implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        previousButtonPressed = false;
         searchButtonPressed = false;
+        previousButtonPressed = false;
         nextButtonPressed = false;
 
 
