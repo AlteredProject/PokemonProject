@@ -159,6 +159,8 @@ public class UI {
         int x = (player.worldX / gp.tileSize) + 1;
         int y = (player.worldY / gp.tileSize) + 1;
 
+        long elapsed = System.currentTimeMillis() - areaDisplayStartTime;
+
 
         int iconX = 635;
         int iconY = -200;
@@ -199,7 +201,7 @@ public class UI {
         }
 
         // Draw only if within 3 seconds
-        if (currentArea != -1 && System.currentTimeMillis() - areaDisplayStartTime <= AREA_DISPLAY_DURATION) {
+        if (currentArea != -1 && elapsed <= AREA_DISPLAY_DURATION) {
 
             if (animatedIconY < 0) {
                 animatedIconY += 4;
@@ -209,8 +211,14 @@ public class UI {
             g2.drawString(areaNames[currentArea], nameX, animatedIconY + 70);
         }
 
+        if (elapsed > AREA_DISPLAY_DURATION) {
 
-
+            if (animatedIconY > -200) {
+                animatedIconY -= 4;
+            }
+            g2.drawImage(areaIcons[currentArea], iconX, animatedIconY, iconWidth, iconHeight, null);
+            g2.drawString(areaNames[currentArea], nameX, animatedIconY + 70);
+        }
     }
 }
 
