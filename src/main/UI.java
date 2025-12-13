@@ -27,6 +27,10 @@ public class UI {
     // ===== Area Icons =====
     Image[] areaIcons = new Image[10];
     String[] areaNames = new String[8];
+    private int currentArea = -1;
+    private long areaDisplayStartTime = 0;
+    private static final long AREA_DISPLAY_DURATION = 3000; // 3 seconds
+    int animatedIconY = -200;
 
 
     public UI(GamePanel gp, Player player) {
@@ -155,53 +159,61 @@ public class UI {
         int x = (player.worldX / gp.tileSize) + 1;
         int y = (player.worldY / gp.tileSize) + 1;
 
+
         int iconX = 635;
-        int iconY = 0;
+        int iconY = -200;
 
         int nameX = 660;
-        int nameY = 70;
+        int nameY = -130;
 
         int iconWidth = 345;
         int iconHeight = 95;
 
+        int newArea = -1;
+
         if (x > 42 && x <= 71 && y >= 5 && y <= 22) {
-            g2.drawImage(areaIcons[3], iconX, iconY, iconWidth, iconHeight, null);
-            g2.drawString(areaNames[3], nameX, nameY);
+            newArea = 3;
+        } else if (x >= 49 && x <= 55 && y >= 62 && y <= 66) {
+            newArea = 5;
+        } else if (x >= 38 && x < 94 && y >= 83 && y <= 94) {
+            newArea = 7;
+        } else if (x <= 38 && y >= 62 && y <= 91) {
+            newArea = 6;
+        } else if (x >= 27 && x <= 54 && y >= 17 && y <= 65) {
+            newArea = 1;
+        } else if (x >= 40 && x <= 92 && y >= 55 && y <= 73) {
+            newArea = 5;
+        } else if (x <= 27 && y >= 38 && y <= 57) {
+            newArea = 0;
+        } else if (x <= 42 && y < 34) {
+            newArea = 2;
+        } else if (x >= 71 && x <= 92 && y >= 7 && y <= 54) {
+            newArea = 4;
         }
-        else if (x>=49 && x <= 55 && y>=62 && y <=66){
-            g2.drawImage(areaIcons[1], iconX, iconY, iconWidth, iconHeight, null);
-            g2.drawString(areaNames[5], nameX, nameY);
+
+        // If area changed, reset timer
+        if (newArea != -1 && newArea != currentArea) {
+            currentArea = newArea;
+            areaDisplayStartTime = System.currentTimeMillis();
+            animatedIconY = -200;
         }
-        else if (x >= 38 && x < 94 && y >= 83 && y <= 94){
-            g2.drawImage(areaIcons[6], iconX, iconY, iconWidth, iconHeight, null);
-            g2.drawString(areaNames[7], nameX, nameY);
+
+        // Draw only if within 3 seconds
+        if (currentArea != -1 && System.currentTimeMillis() - areaDisplayStartTime <= AREA_DISPLAY_DURATION) {
+
+            if (animatedIconY < 0) {
+                animatedIconY += 4;
+            }
+
+            g2.drawImage(areaIcons[currentArea], iconX, animatedIconY, iconWidth, iconHeight, null);
+            g2.drawString(areaNames[currentArea], nameX, animatedIconY + 70);
         }
-        else if (x <= 38 && y >= 62 && y <= 91){
-            g2.drawImage(areaIcons[5], iconX, iconY, iconWidth, iconHeight, null);
-            g2.drawString(areaNames[6], nameX, nameY);
-        }
-        else if (x >= 27 && x <= 54 && y >= 17 && y <= 65){
-            g2.drawImage(areaIcons[1], iconX, iconY, iconWidth, iconHeight, null);
-            g2.drawString(areaNames[1], nameX, nameY);
-        }
-        else if (x >= 40 && x <= 92 && y >= 55 && y <= 73){
-            g2.drawImage(areaIcons[1], iconX, iconY, iconWidth, iconHeight, null);
-            g2.drawString(areaNames[5], nameX, nameY);
-        }
-        else if (x <= 27 && y >= 38 && y <= 57){
-            g2.drawImage(areaIcons[0], iconX, iconY, iconWidth, iconHeight, null);
-            g2.drawString(areaNames[0], nameX, nameY);
-        }
-        else if (x <= 42 && y < 34){
-            g2.drawImage(areaIcons[2], iconX, iconY, iconWidth, iconHeight, null);
-            g2.drawString(areaNames[2], nameX, nameY);
-        }
-        else if (x >= 71 && x <= 92 && y >= 7 && y <= 54){
-            g2.drawImage(areaIcons[4], iconX, iconY, iconWidth, iconHeight, null);
-            g2.drawString(areaNames[4], nameX, nameY);
-        }
+
+
+
     }
 }
+
 
 
 
