@@ -1,12 +1,14 @@
 package main;
 
+import pokedex.Pokedex;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class ClickHandler implements MouseListener {
     GamePanel gp;
-    boolean previousButtonPressed, nextButtonPressed, searchButtonPressed;
+    boolean previousButtonPressed, nextButtonPressed, searchButtonPressed, searching;
     private int x;
     private int y;
 
@@ -25,8 +27,7 @@ public class ClickHandler implements MouseListener {
         this.x = e.getX();
         this.y = e.getY();
         // Pressed on podexIcon
-        if (mousePressedBox(40, 696, 44, 58)&& gp.gameState == gp.playState) {
-            gp.switchPokedexStatus();
+        if (mousePressedBox(40, 696, 44, 58) && gp.gameState == gp.playState) {
             if (gp.gameState != gp.pokedexState) {
                 gp.gameState = gp.pokedexState;
             } else if (gp.gameState == gp.pokedexState) {
@@ -37,8 +38,9 @@ public class ClickHandler implements MouseListener {
         if (mousePressedBox(245, 565, 147, 64)) {
             if (gp.gameState == gp.pokedexState) {
                 searchButtonPressed = true;
-            }
+                gp.pokedex.search();            }
         }
+
         //Pressed on Pokedex left button
         if (mousePressedBox(190, 576, 45, 45)) {
             if (gp.gameState == gp.pokedexState) {
@@ -51,7 +53,7 @@ public class ClickHandler implements MouseListener {
                 nextButtonPressed = true;
             }
         }
-        if (mousePressedBox((gp.screenWidth - (254 * 4)) / 2, gp.screenHeight - (46 * 4) - (gp.tileSize / 8), 254*4, 46*4) && gp.gameState == gp.dialogueState) {
+        if (mousePressedBox((gp.screenWidth - (254 * 4)) / 2, gp.screenHeight - (46 * 4) - (gp.tileSize / 8), 254 * 4, 46 * 4) && gp.gameState == gp.dialogueState) {
             gp.keyH.enterPressed = true;
             gp.buttonSound.playButtonSound();
             gp.gameState = gp.playState;
@@ -63,6 +65,8 @@ public class ClickHandler implements MouseListener {
         previousButtonPressed = false;
         searchButtonPressed = false;
         nextButtonPressed = false;
+
+
 
     }
 

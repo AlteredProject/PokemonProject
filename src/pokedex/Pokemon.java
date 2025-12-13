@@ -1,6 +1,7 @@
 package pokedex;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -13,18 +14,20 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
 
 public class Pokemon {
 
     // ===== ATTRIBUTES =====
     public String name;
-    public int id;
-    public int height;
-    public int weight;
-    public TypeEntry[] types;
-    public Sprites sprites;
-    public EntryStats[] stats;
-    public boolean validPokemon = true;
+    private int id;
+    private int height;
+    private int weight;
+    private TypeEntry[] types;
+    private Sprites sprites;
+    private EntryStats[] stats;
+    private String description;
+    private boolean validPokemon = true;
     private String pokemonSprite;
     private String path;
     private PokedexDatabase pokedexDatabase = new PokedexDatabase();
@@ -64,9 +67,14 @@ public class Pokemon {
 
                 }
                 Gson gson = new Gson();
-                Pokemon p = gson.fromJson(response1.body(), Pokemon.class);
+            Pokemon p = null;
+            try {
+                p = gson.fromJson(response1.body(), Pokemon.class);
+            } catch (JsonSyntaxException e) {
+                return;
+            }
 
-                this.name = p.name;
+            this.name = p.name;
                 this.id = p.id;
                 this.height = p.height;
                 this.weight = p.weight;
@@ -95,7 +103,6 @@ public class Pokemon {
         printAligned("HEIGHT", String.format("%.1f", mtr) + "M");
         printAligned("WEIGHT", String.format("%.1f", kg) + "KG");
 
-
         int typeCounter = 1;
         for (TypeEntry entry : this.types) {
             printAligned("TYPE" + typeCounter, entry.type.name);
@@ -114,6 +121,7 @@ public class Pokemon {
         System.out.println();
         System.out.println("====DESCRIPTION & SPRITE====");
         String description = PokemonDescription.getDescription(this.name);
+        this.description = description;
         printAligned("Description", description);
         printAligned("Sprite URL", this.sprites.front_default);
         System.out.println("=========================================");
@@ -195,6 +203,7 @@ public class Pokemon {
         }
     }
 
+
     private String cachePath() {
         return "src/resources/pokedexPngCache/pokemon_name_" + this.name + ".png";
     }
@@ -210,6 +219,55 @@ public class Pokemon {
     public void setId(int id) {
         this.id = id;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public TypeEntry[] getTypes() {
+        return types;
+    }
+
+    public void setTypes(TypeEntry[] types) {
+        this.types = types;
+    }
+
+    public EntryStats[] getStats() {
+        return stats;
+    }
+
+    public void setStats(EntryStats[] stats) {
+        this.stats = stats;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 }
 
 

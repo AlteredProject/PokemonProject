@@ -1,27 +1,35 @@
 package main;
 
+import pokedex.*;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 public class UI {
     GamePanel gp;
     Graphics2D g2;
+    Pokemon pokemon = new Pokemon();
+    Pokedex pokedex;
     ClickHandler clickH = new ClickHandler(gp);
     UtilityTool uTool = new UtilityTool();
     public BufferedImage dialogueWindowImage, pokedexBoy, pokedexGirl, pokedexIcon, searchButtonReleased, searchButtonPressed, previousButtonReleased, nextButtonReleased, previousButtonPressed, nextButtonPressed, onOffButton;
 
     public Font pkmnFont;
     public boolean messageOn = false;
+    private int stage = 0;
     public String message = "";
     int messageCounter = 0;
     public String currentDialogue = "";
 
-    public UI(GamePanel gp, ClickHandler clickH) {
+    public UI(GamePanel gp, ClickHandler clickH, Pokemon pokemon, Pokedex pokedex) {
         this.gp = gp;
         this.clickH = clickH;
+        this.pokemon = pokemon;
+        this.pokedex = pokedex;
 
 
         InputStream is = getClass().getResourceAsStream("/font/pkmnFont.ttf");
@@ -132,6 +140,13 @@ public class UI {
 
         // BUTTONS
         drawButtons();
+
+        // INFO
+        if (pokemon.name != null || pokemon.getTypes() != null) {
+            drawPokemonInfo();
+            drawPokemonSprite();
+            System.out.println("Goes in here");
+        }
     }
 
     public void drawPokedex(int x, int y, BufferedImage image, int genderState) {
@@ -170,6 +185,68 @@ public class UI {
         } else {
             g2.drawImage(nextButtonReleased, nButtonX, buttonY, size, size, null);
         }
+    }
+
+    // Revised UI.drawPokemonInfo()
+    public void drawPokemonInfo() {
+        int x = gp.tileSize - 5;
+        int y = gp.tileSize + 30; // Start a little lower for better spacing
+        final int lineSpace = 28; // Standard spacing between lines
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 22));
+        g2.setColor(Color.black);
+
+        // --- CRITICAL CHECK: Ensure data is loaded to prevent crash ---
+        if (pokemon.getName() == null || pokemon.getId() == 0 || pokemon.getTypes() == null) {
+            g2.drawString("Searching or No Pokémon Found...", x, y);
+            return; // Stop drawing incomplete data
+        }
+
+        // Base info - MUST INCREMENT Y
+        g2.drawString("POKEMON ID" + " #" + pokemon.getId(), x, y);
+        y += lineSpace;
+
+        g2.drawString("NAME " + pokemon.getName().toUpperCase(), x, y);
+        y += lineSpace;
+
+        g2.drawString("HEIGHT " + String.format("%.1f", pokemon.getHeight() * 0.1) + " M", x, y);
+        y += lineSpace;
+
+        g2.drawString("WEIGHT " + String.format("%.1f", pokemon.getWeight() * 0.1) + " KG", x, y);
+        y += 50; // Extra space before types
+
+        // Pokémon Type (Guaranteed non-null by the initial check)
+        int typeCounter = 1;
+        for (TypeEntry entry : pokemon.getTypes()) {
+            g2.drawString("TYPE " + typeCounter + ": " + entry.type.name.toUpperCase(), x, y);
+            y += lineSpace;
+            typeCounter++;
+        }
+
+        y += 20; // Extra space before stats
+
+        // Pokemon Stats (Need an additional null check if the array could somehow be null here)
+        if (pokemon.getStats() != null) {
+            for (EntryStats entry : pokemon.getStats()) {
+                g2.drawString(entry.stat.name.toUpperCase() + ": " + entry.base_stat, x, y);
+                y += lineSpace;
+            }
+        }
+
+        // Description - REQUIRES WORD WRAPPING for display, but here is a basic line:
+        String description = PokemonDescription.getDescription(pokemon.getName());
+        g2.drawString("DESCRIPTION: " + description.substring(0, Math.min(description.length(), 60)) + "...", x, y);
+    }
+
+    public void drawPokemonSprite() {
+        int pokemonX = 225;
+        int pokemonY = 300;
+        int pokemonSize = 96;
+        if (pokedex.pokemonSprite != null) {
+            System.out.println("sprite not null");
+            g2.drawImage(pokedex.pokemonSprite, pokemonX, pokemonY, pokemonSize * 2, pokemonSize * 2, null);
+        }
+        System.out.println("sprite null");
     }
 
     public int getXForCenteredText(String text) {

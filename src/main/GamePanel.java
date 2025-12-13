@@ -4,6 +4,7 @@ import entity.Entity;
 import entity.Player;
 import object.SuperObject;
 import pokedex.Pokedex;
+import pokedex.Pokemon;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -33,9 +34,13 @@ public class GamePanel extends JPanel implements Runnable {
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler(this);
     ClickHandler clickH = new ClickHandler(this);
+    Pokemon pokemon = new Pokemon();
+    Pokedex pokedex = new Pokedex(this, keyH);
+
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
-    public UI ui = new UI(this, clickH);
+
+    public UI ui = new UI(this, clickH, pokemon, pokedex);
     Thread gameThread;
 
     // == ENTITY & OBJECT ===
@@ -53,7 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // == POKEDEX & BUTTONS ==
     public boolean isPokedexShown = false;
-    public Pokedex pokedex = new Pokedex(this, keyH);
+
 
     // === WORLD SETTINGS ===
     public final int maxWorldCol = 100;
@@ -111,11 +116,11 @@ public class GamePanel extends JPanel implements Runnable {
                 repaint();
             }
 
-            if (System.currentTimeMillis() - timer >= 1000) {
-                System.out.println("FPS: " + drawCount);
-                drawCount = 0;
-                timer += 1000;
-            }
+//            if (System.currentTimeMillis() - timer >= 1000) {
+//                System.out.println("FPS: " + drawCount);
+//                drawCount = 0;
+//                timer += 1000;
+//            }
         }
     }
 
@@ -176,9 +181,6 @@ public class GamePanel extends JPanel implements Runnable {
         // Environment Front of player
         tileM.drawLayer(g2, tileM.mapTileNumEnvironmentF);
 
-        //Pokedex
-        pokedex.draw(g2);
-
         // UI
         ui.draw(g2);
 
@@ -236,7 +238,5 @@ public class GamePanel extends JPanel implements Runnable {
 
      */
 
-    public void switchPokedexStatus() {
-        this.isPokedexShown = !this.isPokedexShown;
-    }
+
 }
