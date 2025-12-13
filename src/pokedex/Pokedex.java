@@ -50,6 +50,19 @@ public void search(){
         }
     }
 
+    public void loadPokemonToPokedex() {
+        String imageUrl = pokemon.getPokemonSprite();
+        URL url;
+        try {
+            URI uri = new URI(imageUrl);
+            url = uri.toURL();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException(ex);
+        }
+        pokemonSprite = pokemon.loadImageFromUrl(url);
+    }
 
     // Loader pokemon sprite til BufferedImage pokemonSprite fra cache
     public void loadPokemonCache() {
