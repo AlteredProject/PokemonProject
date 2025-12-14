@@ -3,7 +3,7 @@ package main;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class KeyHandler implements KeyListener{
+public class KeyHandler implements KeyListener {
     GamePanel gp;
     public boolean upPressed, leftPressed, downPressed, rightPressed, shiftPressed, pPressed, enterPressed, ePressed;
     private int count = 0;
@@ -23,43 +23,46 @@ public class KeyHandler implements KeyListener{
 
         // PLAY STATE
         if (gp.gameState == gp.playState) {
-            if(code == KeyEvent.VK_W) {
+            if (code == KeyEvent.VK_W) {
                 upPressed = true;
             }
-            if(code == KeyEvent.VK_A) {
+            if (code == KeyEvent.VK_A) {
                 leftPressed = true;
             }
-            if(code == KeyEvent.VK_S) {
+            if (code == KeyEvent.VK_S) {
                 downPressed = true;
             }
-            if(code == KeyEvent.VK_D) {
+            if (code == KeyEvent.VK_D) {
                 rightPressed = true;
             }
             if (code == KeyEvent.VK_E) {
                 ePressed = true;
             }
-            if(code == KeyEvent.VK_P) {
+            if (code == KeyEvent.VK_P) {
                 gp.gameState = gp.pokedexState;
             }
-
-            if(code == KeyEvent.VK_SHIFT) {
+            if (code == KeyEvent.VK_SHIFT) {
                 shiftPressed = true;
             }
-            if(code == KeyEvent.VK_ESCAPE) {
+            if (code == KeyEvent.VK_ESCAPE) {
                 gp.gameState = gp.pauseState;
+            }
+            // TITLE SCREEN STATE
+            else if (code == KeyEvent.VK_T) {
+                gp.gameState = gp.titleScreenState;
             }
         }
 
         // PAUSE STATE
         else if (gp.gameState == gp.pauseState) {
-            if(code == KeyEvent.VK_ESCAPE) {
+            if (code == KeyEvent.VK_ESCAPE) {
                 gp.gameState = gp.playState;
             }
         }
 
         // DIALOGUE STATE
         else if (gp.gameState == gp.dialogueState) {
-            if (code == KeyEvent.VK_ENTER){
+            if (code == KeyEvent.VK_ENTER) {
                 enterPressed = true;
                 gp.buttonSound.playButtonSound();
                 gp.gameState = gp.playState;
@@ -68,10 +71,10 @@ public class KeyHandler implements KeyListener{
 
         // POKEDEX STATE
         else if (gp.gameState == gp.pokedexState) {
-            if(code == KeyEvent.VK_P) {
+            if (code == KeyEvent.VK_P) {
                 gp.gameState = gp.playState;
             }
-            if(code == KeyEvent.VK_ESCAPE) {
+            if (code == KeyEvent.VK_ESCAPE) {
                 gp.gameState = gp.playState;
             }
         }
