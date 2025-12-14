@@ -30,9 +30,9 @@ public class NPC_GymLeader extends Entity {
     }
 
     public void setDialogue() {
-        dialogues[0] = "Ahh a challenger i see..";
-        dialogues[1] = "This here is my gym, for i \nam the gym leader!";
-        dialogues[2] = "Are you ready for a battle against \nthe strongest guy in this town!";
+        dialogues[0] = "Have you come to challenge me?";
+        dialogues[1] = "That's quite brave of you kid.";
+        dialogues[2] = "Are you ready for a battle against \nthe strongest guy in this town?!";
     }
 
     public void speak() {
