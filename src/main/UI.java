@@ -3,12 +3,10 @@ package main;
 import pokedex.*;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 public class UI {
     GamePanel gp;
@@ -17,7 +15,7 @@ public class UI {
     Pokedex pokedex;
     ClickHandler clickH = new ClickHandler(gp);
     UtilityTool uTool = new UtilityTool();
-    public BufferedImage dialogueWindowImage, pokedexBoy, pokedexGirl, pokedexIcon, searchButtonReleased, searchButtonPressed, previousButtonReleased, nextButtonReleased, previousButtonPressed, nextButtonPressed, onOffButton;
+    public BufferedImage dialogueWindowImage, pokedexBoy, pokedexGirl, pokedexIcon, searchButtonReleased, searchButtonPressed, previousButtonReleased, nextButtonReleased, previousButtonPressed, nextButtonPressed, onOffButtonOn, onOffButtonOff;
 
     public Font pkmnFont;
     public boolean messageOn = false;
@@ -54,7 +52,8 @@ public class UI {
             previousButtonPressed = ImageIO.read(getClass().getResourceAsStream("/pokedexSprites/directionRedLeft.png"));
             nextButtonReleased = ImageIO.read(getClass().getResourceAsStream("/pokedexSprites/directionBlueRight.png"));
             nextButtonPressed = ImageIO.read(getClass().getResourceAsStream("/pokedexSprites/directionRedRight.png"));
-            onOffButton = ImageIO.read(getClass().getResourceAsStream("/pokedexSprites/onOffButton.png"));
+            onOffButtonOn = ImageIO.read(getClass().getResourceAsStream("/pokedexSprites/onOffButtonOn.png"));
+            onOffButtonOff = ImageIO.read(getClass().getResourceAsStream("/pokedexSprites/onOffButtonOff.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -173,6 +172,10 @@ public class UI {
         int height = 64;
         int size = 48;
         int sButtonX = 245;
+        int onOffX = 625;
+        int onOffY = 200;
+        int onOffW = 51;
+        int onOffH = 47;
 
         if (clickH.previousButtonPressed) {
             g2.drawImage(previousButtonPressed, pButtonX, buttonY, size, size, null);
@@ -191,6 +194,11 @@ public class UI {
         } else {
             g2.drawImage(nextButtonReleased, nButtonX, buttonY, size, size, null);
         }
+        if (!clickH.onOff) {
+            g2.drawImage(onOffButtonOn, onOffX, onOffY, onOffW, onOffH, null);
+        } else if (clickH.onOff) {
+            g2.drawImage(onOffButtonOff, onOffX, onOffY, onOffW, onOffH, null);
+        }
     }
 
     public void drawPokemonInfo() {
@@ -206,7 +214,8 @@ public class UI {
         }
 
         if (pokemon.getName() == null || pokemon.getId() == 0 || pokemon.getTypes() == null) {
-            g2.drawString("No Pokémon Found...Try again!", 655, 395);
+            g2.drawString("No Pokémon Found...", 655, 395);
+            g2.drawString("Try again!", 695, 420);
             return;
         }
 

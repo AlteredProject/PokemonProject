@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 
 public class ClickHandler implements MouseListener {
     GamePanel gp;
-    boolean previousButtonPressed, nextButtonPressed, searchButtonPressed, searching, isNextButtonPressed, isPreviousButtonPressed;
+    boolean previousButtonPressed, nextButtonPressed, searchButtonPressed, searching, isNextButtonPressed, isPreviousButtonPressed, onOff;
     private int x;
     private int y;
 
@@ -63,6 +63,13 @@ public class ClickHandler implements MouseListener {
                 if (!input.isEmpty()) {
                     gp.pokedex.search(input);
                 }
+            }
+        }
+        // Pressed on Pokedex ON/OFF button
+        if (mousePressedBox(398, 576, 45, 45)) {
+            if (gp.gameState == gp.pokedexState) {
+                onOff = true;
+
             }
         }
         if (mousePressedBox((gp.screenWidth - (254 * 4)) / 2, gp.screenHeight - (46 * 4) - (gp.tileSize / 8), 254 * 4, 46 * 4) && gp.gameState == gp.dialogueState) {
