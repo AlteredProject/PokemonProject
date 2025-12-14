@@ -46,9 +46,8 @@ public class Battle {
 
     // Messages
     private String message = "";
-
-    private int messageTimer = 0;
-    private int messageDuration = 30;
+    private long messageUntil = 0;
+    private long messageDuration = 1300; //Millisecond
 
     private Random rng = new Random();
 
@@ -72,7 +71,7 @@ public class Battle {
         enemyMaxHp = getBaseStat(enemyPokemon, "hp");
         enemyCurrentHp = enemyMaxHp;
 
-        // === HARCODED MOVES === May change later
+        // === HARCODED MOVES === will change or add more later
         playerMoves = new Moves[] {
                 new Moves("Tackle", 40),
                 new Moves("Quick Attack", 40),
@@ -108,16 +107,18 @@ public class Battle {
     }
 
     public void update(){
-        if (isBattleFinished == true) {
+        // If player run or Pokémon feint, ends battle
+        if (isBattleFinished) {
             endBattle();
         }
 
-        if (messageTimer > 0) {
-            messageTimer--;
+        // Timer to show messages
+        if (System.currentTimeMillis() < messageUntil) {
             return;
         }
 
-        if (isPlayerTurn == true){
+        // Battle flow
+        if (isPlayerTurn){
             mouseClick();
         } else {
             enemyTurn();
@@ -156,53 +157,50 @@ public class Battle {
 
             if(gp.leftClick.mousePressedBox(bagButton.x, bagButton.y, bagButton.width, bagButton.height)){
                 menuState = bagMenu;
-                message = "You opened your bag... (not implemented)";
-                messageTimer = messageDuration;
+                showMessage("You opened your bag... (not implemented)");
                 gp.leftClick.clicked = false;
                 return;
             }
 
             if(gp.leftClick.mousePressedBox(pokeButton.x, pokeButton.y, pokeButton.width, pokeButton.height)){
                 menuState = pokeMenu;
-                message = "You look at your Pokemons... (not implemented)";
-                messageTimer = messageDuration;
+                showMessage("You look at your Pokemons... (not implemented)");
                 gp.leftClick.clicked = false;
                 return;
             }
 
             if(gp.leftClick.mousePressedBox(runButton.x, runButton.y, runButton.width, runButton.height)){
                 menuState = runAway;
-                message = "You ran away safely!";
-                messageTimer = messageDuration;
+                showMessage("You ran away safely!");
                 isBattleFinished = true;
                 gp.leftClick.clicked = false;
                 return;
             }
         } else if (menuState == fightMenu){
-
             for (int i = 0; i < moveBoxes.length; i++){
                 Rectangle r = moveBoxes[i];
 
                 if (gp.leftClick.mousePressedBox(r.x, r.y, r.width, r.height)){
                     if (i < playerMoves.length){
                         usePlayerMove(i);
+                        // return to main menu
+                        menuState = mainMenu;
+                        gp.leftClick.clicked = false;
+                        return;
                     } else {
-                        message = "No move in that slot.";
-                        messageTimer = messageDuration;
+                        showMessage("No move in that slot.");
                         return;
                     }
                 }
 
-                if (gp.leftClick. mousePressedBox(menuRightX - 40, menuRightY - 40, (buttonW+gapX)*2 + 80, (buttonH+gapY)*2 + 80));{
-                    menuState = mainMenu;
-                    gp.leftClick.clicked = false;
-                    return;
-                }
+//                if (gp.leftClick.mousePressedBox(menuRightX - 40, menuRightY - 40, (buttonW+gapX) * 2 + 80, (buttonH+gapY) * 2 + 80)) {
+//                    menuState = mainMenu;
+//                    gp.leftClick.clicked = false;
+//                    return;
+//                }
             }
-
         } else {
-            message = "Menu not implemented";
-            messageTimer = messageDuration;
+            showMessage("Menu not implemented");
             menuState = mainMenu;
             gp.leftClick.clicked = false;
             return;
@@ -217,46 +215,40 @@ public class Battle {
         if (move == null) return;
 
         if (move.power <= 0){
-            message = playerPokemon.getName() + " used " + move.name + "! It did no damage...";
-
+            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + "! It did no damage...");
         } else {
             int damage = calculateDamage(move.power);
             enemyCurrentHp = Math.max(0, enemyCurrentHp - damage);
-            message = playerPokemon.getName() + " used " + move.name + " and dealt " + damage + "HP!";
+            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + " and dealt " + damage + "HP!");
         }
-
 
         if (enemyCurrentHp <= 0) {
-            message = "Enemy " + enemyPokemon.getName() + " fainted!";
+            showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " fainted!");
             isBattleFinished = true;
-            messageTimer = messageDuration;
         }
 
-        // Should make it enemy turn;
         isPlayerTurn = false;
     }
 
     private void enemyTurn(){
         if (enemyMoves == null){
-            message = "Enemy has no moves...";
+            showMessage("Enemy has no moves...");
             isBattleFinished = true;
-            messageTimer = messageDuration;
             return;
         }
 
         Moves move = enemyMoves[rng.nextInt(enemyMoves.length)];
         if (move.power <=0){
-            message = "Enemy " + enemyPokemon.getName() + " used " + move.name + "! It did no damage...";
+            showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " used " + move.name + "! It did no damage...");
         } else {
             int damage = calculateDamage(move.power);
             playerCurrentHp = Math.max(0, playerCurrentHp - damage);
-            message = "Enemy " + enemyPokemon.getName() + " used " + move.name + " and dealt " + damage + "HP!";
+            showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " used " + move.name + " and dealt " + damage + "HP!");
         }
 
         if (playerCurrentHp <= 0){
-            message = "Your " + playerPokemon.getName() + " fainted!";
+            showMessage("Your " + playerPokemon.getName().toUpperCase() + " fainted!");
             isBattleFinished = true;
-            messageTimer = messageDuration;
             return;
         }
 
@@ -289,7 +281,7 @@ public class Battle {
         g2.setColor(Color.WHITE);
 
         g2.drawString((enemyPokemon != null ? enemyPokemon.getName().toUpperCase() : "Enemy"), 50, 200);
-        g2.drawString("??", 350, 200);
+        g2.drawString("??", 350, 202);
 
         // enemy HP bar in that box
         double eRatio = (double) enemyCurrentHp / Math.max(1, enemyMaxHp);
@@ -306,7 +298,7 @@ public class Battle {
 
         g2.setColor(Color.WHITE);
         g2.drawString((playerPokemon != null ? playerPokemon.getName().toUpperCase() : "You"), 650, 425);
-        g2.drawString("??", 940, 425);
+        g2.drawString("1", 940, 428);
 
         double pRatio = (double) playerCurrentHp / Math.max(1, playerMaxHp);
         int pBarX = 809, pBarY = 449, pBarW = 184, pBarH = 5;
@@ -320,10 +312,14 @@ public class Battle {
         // Message box bottom-left
         g2.drawImage(dialogBox, 0, 560, gp.screenWidth, 145, null);
 
-        // MAIN MENU / MOVE UI bottom-right (mimic screenshot: 4 button grid)
-        int menuRightX = 680;
+        // Message Text
+        g2.setColor(Color.BLACK);
+        g2.drawString(message, 50, 620);
+
+        // MAIN MENU / MOVE UI bottom-right
+        int menuRightX = 630;
         int menuRightY = 580;
-        int buttonW = 120;
+        int buttonW = 150;
         int buttonH = 50;
         int gapX = 5;
         int gapY = 5;
@@ -414,5 +410,14 @@ public class Battle {
     public void endBattle (){
         gp.gameState = gp.playState;
         gp.battle = null;
+    }
+
+    public void rightClick() {
+        menuState = mainMenu;
+    }
+
+    public void showMessage(String text){
+        this.message = text;
+        this.messageUntil = System.currentTimeMillis() + messageDuration;
     }
 }
