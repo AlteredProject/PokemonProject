@@ -14,7 +14,7 @@ public class UI {
     ClickHandler clickH;
 
     UtilityTool uTool = new UtilityTool();
-    public BufferedImage dialogueWindowImage, pokedexBoy, pokedexGirl, pokedexIcon, searchButtonReleased, searchButtonPressed, previousButtonReleased, nextButtonReleased, previousButtonPressed, nextButtonPressed, onOffButton, titleScreenBackground,logo,opal,rowan,lucas,dawn;
+    public BufferedImage dialogueWindowImage, pokedexBoy, pokedexGirl, pokedexIcon, searchButtonReleased, searchButtonPressed, previousButtonReleased, nextButtonReleased, previousButtonPressed, nextButtonPressed, onOffButton, titleScreenBackground, logo, opal, rowan, lucas, dawn;
 
     public Font pkmnFont;
     public boolean messageOn = false;
@@ -29,6 +29,9 @@ public class UI {
     private long areaDisplayStartTime = 0;
     private static final long AREA_DISPLAY_DURATION = 3000; // 3 seconds
     int animatedIconY = -200;
+
+    int resetter = 0;
+    boolean display;
 
     public UI(GamePanel gp, ClickHandler clickH) {
         this.gp = gp;
@@ -301,19 +304,30 @@ public class UI {
         g2.setColor(Color.BLACK);
 
         g2.drawImage(titleScreenBackground, 0, 0, gp.screenWidth, gp.screenHeight, null);
-        g2.drawImage(logo, (gp.screenWidth/2) -350, 25, 700, 250, null);
-        g2.drawString("Press enter to start",gp.screenWidth/2-150,gp.screenHeight/2+100);
+        g2.drawImage(logo, (gp.screenWidth / 2) - 350, 25, 700, 250, null);
+
+        if (!display) {
+            g2.drawString("Press enter to start", gp.screenWidth / 2 - 150, gp.screenHeight / 2 + 100);
+        }
+
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 16));
-        g2.drawString("Made By: Andreas, Jacob, Theis & Bertram",25,750);
-        g2.drawImage(opal,gp.screenWidth/2-150, 250, 350, 150, null);
-        g2.drawImage(rowan,750, 400, 94*2, 139*2, null);
-        g2.drawImage(lucas,100, 400, 56*2, 123*2, null);
-        g2.drawImage(dawn,200, 450, 63*2, 125*2, null);
+        g2.drawString("Made By: Andreas, Jacob, Theis & Bertram", 25, 750);
+        g2.drawImage(opal, gp.screenWidth / 2 - 150, 250, 350, 150, null);
+        g2.drawImage(rowan, 750, 400, 94 * 2, 139 * 2, null);
+        g2.drawImage(lucas, 100, 400, 56 * 2, 123 * 2, null);
+        g2.drawImage(dawn, 200, 450, 63 * 2, 125 * 2, null);
 
+        resetter += 1;
 
-
-
-
+        if (resetter < 75){
+            display = false;
+        }
+         if (resetter > 75){
+            display = true;
+        }
+         if (resetter > 150){
+            resetter = 0;
+        }
     }
 }
 
