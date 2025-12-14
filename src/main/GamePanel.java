@@ -80,6 +80,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.addMouseListener(clickH);
         this.setFocusable(true);
+        this.setOpaque(true);
+        this.setIgnoreRepaint(false);
+        this.setLayout(null);
     }
 
     public void setupGame() {
@@ -87,6 +90,7 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setObject();
         aSetter.setNPC();
         gameState = playState;
+
     }
 
     public void startGameThread() {
@@ -229,6 +233,17 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void stopMusic() {
         music.stop();
+    }
+
+    public long getDrawCount() {
+        return drawCount;
+    }
+
+    public void initializeUIComponents() {
+        if (ui != null) {
+            ui.inputSetup();
+        }
+
     }
 
     /*public void playSFX(int i) {

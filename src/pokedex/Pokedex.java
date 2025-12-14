@@ -2,7 +2,6 @@ package pokedex;
 
 import main.GamePanel;
 import main.KeyHandler;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,7 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Scanner;
 
 public class Pokedex {
     private final Object searchLock = new Object();
@@ -27,34 +25,38 @@ public class Pokedex {
     Pokemon pokemon;
     private BufferedImage pokedexCache;
 
-
-
     // Constructor
     public Pokedex(GamePanel gp, KeyHandler keyH, Pokemon pokemon) {
         this.gp = gp;
         this.keyH = keyH;
         this.pokemon = pokemon;
     }
-public void search(){
-    if (isSearching) {
-        return;
-    }
-    Thread searchThread = new Thread(() -> {
-        try {
-            isSearching = true;
-            System.out.println("DEBUG: Search Thread Started.");
-            scanForInput();
-            searchForPokemon();
-        } finally {
-            isSearching = false;
-            System.out.println("DEBUG: Search Thread Finished.");
-            if (gp != null) {
-                gp.repaint();
-            }
+
+    public void search(String nameOrId) {
+        if (isSearching) {
+            return;
         }
-    });
-    searchThread.start();
-}
+        pokemon.setName(nameOrId.toLowerCase());
+        try {
+            pokemon.setId(Integer.parseInt(nameOrId));
+        } catch (NumberFormatException _) {
+        }
+        Thread searchThread = new Thread(() -> {
+            try {
+                isSearching = true;
+                System.out.println("DEBUG: Search Thread Started.");
+                searchForPokemon();
+            } finally {
+                isSearching = false;
+                System.out.println("DEBUG: Search Thread Finished.");
+                if (gp != null) {
+                    gp.repaint();
+                }
+            }
+        });
+        searchThread.start();
+    }
+
     // Scanner for input og ser om filen findes lokalt eller skal loades fra API
     public void searchForPokemon() {
         pokemon.pokedexLoad();
@@ -96,20 +98,6 @@ public void search(){
             e.printStackTrace();
         }
         pokemonSprite = pokedexCache;
-    }
-
-    // Scanner for input fra bruger
-    public void scanForInput() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("=========================================");
-        System.out.println("Welcome to the international pokédex database");
-        System.out.print("Please enter pokemon name: ");
-        name = sc.nextLine().toLowerCase();
-        pokemon.setName(name);
-        try {
-            pokemon.setId(Integer.parseInt(name));
-        } catch (NumberFormatException _) {
-        }
     }
 
     private String cachePath() {

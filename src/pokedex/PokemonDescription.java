@@ -26,10 +26,6 @@ public class PokemonDescription {
 
             Gson gson = new Gson();
             PokemonSpecies species = gson.fromJson(response.body(), PokemonSpecies.class);
-
-
-            System.out.println("Capture Rate: " + species.capture_rate);
-
             for (FlavorTextEntry entry : species.flavor_text_entries) {
                 if (entry.language.name.equals("en")) {
                     return entry.flavor_text.replace("\n", " ");

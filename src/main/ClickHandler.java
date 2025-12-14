@@ -38,7 +38,11 @@ public class ClickHandler implements MouseListener {
         if (mousePressedBox(245, 565, 147, 64)) {
             if (gp.gameState == gp.pokedexState) {
                 searchButtonPressed = true;
-                gp.pokedex.search();            }
+                searching = true;
+                gp.ui.drawingInput = true;
+                gp.ui.inputBuffer = "";
+                gp.repaint();
+            }
         }
 
         //Pressed on Pokedex left button

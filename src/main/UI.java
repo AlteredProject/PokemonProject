@@ -3,6 +3,7 @@ package main;
 import pokedex.*;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -25,23 +26,14 @@ public class UI {
     public String message = "";
     int messageCounter = 0;
     public String currentDialogue = "";
+    public String inputBuffer = "";
+    public boolean drawingInput = false;
 
     public UI(GamePanel gp, ClickHandler clickH, Pokemon pokemon, Pokedex pokedex) {
         this.gp = gp;
         this.clickH = clickH;
         this.pokemon = pokemon;
         this.pokedex = pokedex;
-
-
-        InputStream is = getClass().getResourceAsStream("/font/pkmnFont.ttf");
-        try {
-            pkmnFont = Font.createFont(Font.TRUETYPE_FONT, is);
-        } catch (FontFormatException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        getUIImages();
     }
 
     public void showMessage(String text) {
@@ -154,9 +146,11 @@ public class UI {
             g2.drawString("PÓKEDEX", 695, 396);
             g2.setFont(g2.getFont().deriveFont(Font.BOLD, 8));
             g2.drawString("Welcome to the International", 655, 376);
-            g2.drawString("Search for a Pokémon by", 667, 450
-            );
+            g2.drawString("Search for a Pokémon by", 667, 450);
             g2.drawString("name or number", 697, 465);
+        }
+        if (clickH.searching) {
+            drawCustomInputBox();
         }
 
     }
@@ -199,63 +193,59 @@ public class UI {
         }
     }
 
-    // Revised UI.drawPokemonInfo()
     public void drawPokemonInfo() {
         int x = 625;
-        int y = 345; // Start a little lower for better spacing
-        final int lineSpace = 15; // Standard spacing between lines
+        int y = 340;
+        final int lineSpace = 15;
 
-        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 7));
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 10));
         g2.setColor(Color.black);
         if (pokedex.isSearching()) {
-            g2.drawString("Enter name or number", 680, 395);
+            g2.drawString("Loading...", 700, 675);
             return;
         }
 
-        // --- CRITICAL CHECK: Ensure data is loaded to prevent crash ---
         if (pokemon.getName() == null || pokemon.getId() == 0 || pokemon.getTypes() == null) {
             g2.drawString("No Pokémon Found...Try again!", 655, 395);
-            return; // Stop drawing incomplete data
+            return;
         }
 
-        // #id and Name
+        // Name
         int xName = getXForCenteredTextAt(pokemon.getName(), 720);
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 12));
         g2.drawString(pokemon.getName().toUpperCase(), xName, 675);
 
-        // Base info - MUST INCREMENT Y
+        // Base info
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 10));
         g2.drawString("NUMBER #" + pokemon.getId(), x, y);
         y += lineSpace;
-
         g2.drawString("HEIGHT " + String.format("%.1f", pokemon.getHeight() * 0.1) + " M", x, y);
         y += lineSpace;
-
         g2.drawString("WEIGHT " + String.format("%.1f", pokemon.getWeight() * 0.1) + " KG", x, y);
-        y += 15; // Extra space before types
+        y += lineSpace;
 
+        // Pokemon type
         int typeCounter = 1;
         for (TypeEntry entry : pokemon.getTypes()) {
             g2.drawString("TYPE " + typeCounter + ": " + entry.type.name.toUpperCase(), x, y);
             y += lineSpace;
             typeCounter++;
         }
-
-        y += 15; // Extra space before stats
-
-        // Pokemon Stats (Need an additional null check if the array could somehow be null here)
+        y += lineSpace;
+        // Pokemon Stats
         if (pokemon.getStats() != null) {
             for (EntryStats entry : pokemon.getStats()) {
                 g2.drawString(entry.stat.name.toUpperCase() + ": " + entry.base_stat, x, y);
                 y += lineSpace;
             }
         }
+        // Pokemon description
         y += lineSpace;
         String description = PokemonDescription.getDescription(pokemon.getName());
         g2.drawString("DESCRIPTION: ", x, y);
-        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 10));
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 9));
         y += lineSpace;
-        drawWrappedText(g2, description, x, y, 250, 15);
+        drawWrappedText(g2, description, x, y, 258, 12);
 
 
     }
@@ -279,21 +269,7 @@ public class UI {
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         return targetCenterX - length / 2;
     }
-    // Inside main/UI.java
 
-// ... existing methods ...
-
-    /**
-     * Draws text that automatically wraps to a new line when it exceeds maxLineWidth.
-     *
-     * @param g2           The Graphics2D context.
-     * @param text         The string to be drawn.
-     * @param startX       The starting X-coordinate for the text block.
-     * @param startY       The starting Y-coordinate for the text block.
-     * @param maxLineWidth The maximum width in pixels before a line break occurs.
-     * @param lineSpacing  The vertical spacing between lines in pixels.
-     * @return The final Y-coordinate after drawing all the text.
-     */
     public int drawWrappedText(Graphics2D g2, String text, int startX, int startY, int maxLineWidth, int lineSpacing) {
         FontMetrics fm = g2.getFontMetrics();
         String[] words = text.split(" ");
@@ -314,12 +290,52 @@ public class UI {
                 currentLine = word;
             }
         }
-
         if (!currentLine.isEmpty()) {
             g2.drawString(currentLine, startX, y);
             y += lineSpacing;
         }
 
         return y;
+    }
+
+    public void inputSetup() {
+        InputStream is = getClass().getResourceAsStream("/font/pkmnFont.ttf");
+        try {
+            pkmnFont = Font.createFont(Font.TRUETYPE_FONT, is);
+        } catch (FontFormatException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        getUIImages();
+    }
+
+    public void drawCustomInputBox() {
+        if (!drawingInput) {
+            return;
+        }
+
+        int boxX = 625;
+        int boxY = 645;
+        int boxWidth = 250;
+        int boxHeight = 40;
+
+        g2.setColor(new Color(100, 117, 113));
+        g2.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+        g2.setFont(pkmnFont.deriveFont(Font.BOLD, 12));
+        g2.setColor(Color.BLACK);
+
+        int textX = boxX + 10;
+        int textY = boxY + boxHeight - 12;
+        int xName = getXForCenteredTextAt(inputBuffer, 743);
+        g2.drawString(inputBuffer.toUpperCase(), xName, textY);
+
+        if (gp.getDrawCount() % 60 < 30) {
+            FontMetrics fm = g2.getFontMetrics();
+            int cursorX = xName+(inputBuffer.length()*14) ;
+            g2.drawLine(cursorX, textY - fm.getHeight() + 5, cursorX, textY + 5);
+        }
+
     }
 }
