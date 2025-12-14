@@ -1,7 +1,7 @@
 package pokedex;
 
 public class TypeEntry {
-    TypeInfo type;
+    public TypeInfo type;
     int slot;
 
 }

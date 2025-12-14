@@ -4,6 +4,7 @@ import entity.Entity;
 import entity.Player;
 import object.SuperObject;
 import pokedex.Pokedex;
+import pokedex.Pokemon;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -36,9 +37,12 @@ public class GamePanel extends JPanel implements Runnable {
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler(this);
     ClickHandler clickH = new ClickHandler(this);
+    Pokemon originalPokemon = new Pokemon();
+    Pokedex pokedex = new Pokedex(this, keyH, originalPokemon);
+
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
-    public UI ui = new UI(this, clickH);
+    public UI ui = new UI(this, clickH, originalPokemon, pokedex);
     Thread gameThread;
 
     // == ENTITY & OBJECT ===
@@ -53,11 +57,6 @@ public class GamePanel extends JPanel implements Runnable {
     public final int pauseState = 2;
     public final int dialogueState = 3;
     public final int pokedexState = 4;
-    public final int pokedexSearchState = 5;
-
-    // == POKEDEX & BUTTONS ==
-    public boolean isPokedexShown = false;
-    public Pokedex pokedex = new Pokedex(this, keyH);
 
     // === WORLD SETTINGS ===
     public final int maxWorldCol = 100;
@@ -79,6 +78,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.addMouseListener(clickH);
         this.setFocusable(true);
+        this.setOpaque(true);
+        this.setIgnoreRepaint(false);
+        this.setLayout(null);
     }
 
     public void setupGame() {
@@ -115,11 +117,11 @@ public class GamePanel extends JPanel implements Runnable {
                 repaint();
             }
 
-            if (System.currentTimeMillis() - timer >= 1000) {
-                System.out.println("FPS: " + drawCount);
-                drawCount = 0;
-                timer += 1000;
-            }
+//            if (System.currentTimeMillis() - timer >= 1000) {
+//                System.out.println("FPS: " + drawCount);
+//                drawCount = 0;
+//                timer += 1000;
+//            }
         }
     }
 
@@ -181,13 +183,10 @@ public class GamePanel extends JPanel implements Runnable {
             // Environment Front of player
             tileM.drawLayer(g2, tileM.mapTileNumEnvironmentF);
 
-            //Pokedex
-            pokedex.draw(g2);
-        }
-            // UI
-            ui.draw(g2);
+        // UI
+        ui.draw(g2);
 
-
+}
 
         // DEBUG
         long passedTime = System.nanoTime() - drawStart;
@@ -211,10 +210,10 @@ public class GamePanel extends JPanel implements Runnable {
             frameSincePrint++;
             int printInterval = 30;
             if (frameSincePrint >= printInterval) {
-                System.out.printf(
-                    "Draw: %.3f ms | Highest: %.3f ms | Average: %.3f ms%n",
-                    passedMs, highestMs, averageMs
-                );
+//                System.out.printf(
+//                        "Draw: %.3f ms | Highest: %.3f ms | Average: %.3f ms%n",
+//                        passedMs, highestMs, averageMs
+//                );
 //                System.out.println("xPos: " + ((player.worldX/64)+1) + " yPos: " + ((player.worldY/64)+1));
                 frameSincePrint = 0;
             }
@@ -234,14 +233,14 @@ public class GamePanel extends JPanel implements Runnable {
         music.stop();
     }
 
-    /*
-    public void playSFX(int i) {
-        sfx.setFile();
-        sfx.play();
+    public long getDrawCount() {
+        return drawCount;
     }
-     */
 
-    public void switchPokedexStatus() {
-        this.isPokedexShown = !this.isPokedexShown;
+    public void initializeUIComponents() {
+        if (ui != null) {
+            ui.inputSetup();
+        }
+
     }
 }

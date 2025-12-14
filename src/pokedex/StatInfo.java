@@ -2,6 +2,6 @@ package pokedex;
 
 public class StatInfo {
 
-    String name;
+    public String name;
     String url;
 }

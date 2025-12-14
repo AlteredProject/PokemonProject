@@ -1,5 +1,5 @@
 package pokedex;
 
 public class TypeInfo {
-    String name;
+    public String name;
 }
