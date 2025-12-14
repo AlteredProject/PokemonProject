@@ -52,7 +52,7 @@ public class UI {
     }
 
     public void getUIImages() {
-        dialogueWindowImage = setup("/ui/dialogueBox", 3, 3);
+        dialogueWindowImage = setup("/ui/dialogueBox");
         uTool.scaleImage(dialogueWindowImage, 3, 3);
 
         pokedexBoy = setup("/pokedexSprites/boy");
@@ -152,6 +152,37 @@ public class UI {
         }
     }
 
+    public void drawTitleScreen() {
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 18));
+        g2.setColor(Color.BLACK);
+
+        g2.drawImage(titleScreenBackground, 0, 0, gp.screenWidth, gp.screenHeight, null);
+        g2.drawImage(logo, (gp.screenWidth / 2) - 350, 25, 700, 250, null);
+
+        if (!display) {
+            g2.drawString("Press enter to start", gp.screenWidth / 2 - 150, gp.screenHeight / 2 + 100);
+        }
+
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 16));
+        g2.drawString("Made By: Andreas, Jakob, Theis & Bertram", 25, 750);
+        g2.drawImage(opal, gp.screenWidth / 2 - 150, 250, 350, 150, null);
+        g2.drawImage(rowan, 750, 400, 94 * 2, 139 * 2, null);
+        g2.drawImage(lucas, 100, 400, 56 * 2, 123 * 2, null);
+        g2.drawImage(dawn, 200, 450, 63 * 2, 125 * 2, null);
+
+        resetter += 1;
+
+        if (resetter < 75) {
+            display = false;
+        }
+        if (resetter > 75) {
+            display = true;
+        }
+        if (resetter > 150) {
+            resetter = 0;
+        }
+    }
+
     public void drawPokedexIcon() {
         int x = 25;
         int y = 690;
@@ -197,6 +228,72 @@ public class UI {
         g2.drawImage(image, x, y, image.getWidth() * 4, image.getHeight() * 4, null);
     }
 
+    // ===== AREA ICONS =====
+    public void drawAreaIcons() {
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 18));
+        g2.setColor(Color.BLACK);
+
+        int x = (gp.player.worldX / gp.tileSize) + 1;
+        int y = (gp.player.worldY / gp.tileSize) + 1;
+
+        long elapsed = System.currentTimeMillis() - areaDisplayStartTime;
+
+        int iconX = 635;
+        int iconY = -200;
+
+        int nameX = 660;
+        int nameY = -130;
+
+        int iconWidth = 345;
+        int iconHeight = 95;
+
+        int newArea = -1;
+
+        if (x > 42 && x <= 71 && y >= 5 && y <= 22) {
+            newArea = 3;
+        } else if (x >= 49 && x <= 55 && y >= 62 && y <= 66) {
+            newArea = 5;
+        } else if (x >= 38 && x < 94 && y >= 83 && y <= 94) {
+            newArea = 7;
+        } else if (x <= 38 && y >= 62 && y <= 91) {
+            newArea = 6;
+        } else if (x >= 27 && x <= 54 && y >= 17 && y <= 65) {
+            newArea = 1;
+        } else if (x >= 40 && x <= 92 && y >= 55 && y <= 73) {
+            newArea = 5;
+        } else if (x <= 27 && y >= 38 && y <= 57) {
+            newArea = 0;
+        } else if (x <= 42 && y < 34) {
+            newArea = 2;
+        } else if (x >= 71 && x <= 92 && y >= 7 && y <= 54) {
+            newArea = 4;
+        }
+
+        // If area changed, reset timer
+        if (newArea != -1 && newArea != currentArea) {
+            currentArea = newArea;
+            areaDisplayStartTime = System.currentTimeMillis();
+            animatedIconY = -200;
+        }
+
+        // Draw only if within 3 seconds
+        if (currentArea != -1 && elapsed <= AREA_DISPLAY_DURATION) {
+            if (animatedIconY < 0) {
+                animatedIconY += 4;
+            }
+            g2.drawImage(areaIcons[currentArea], iconX, animatedIconY, iconWidth, iconHeight, null);
+            g2.drawString(areaNames[currentArea], nameX, animatedIconY + 70);
+        }
+
+        if (elapsed > AREA_DISPLAY_DURATION) {
+            if (animatedIconY > -200) {
+                animatedIconY -= 4;
+            }
+            g2.drawImage(areaIcons[currentArea], iconX, animatedIconY, iconWidth, iconHeight, null);
+            g2.drawString(areaNames[currentArea], nameX, animatedIconY + 70);
+        }
+    }
+
     // ===== POKEDEX =====
     public void drawPokedexScreen() {
         // POKEDEX
@@ -237,9 +334,9 @@ public class UI {
                 image = pokedexBoy;
             }
             g2.drawImage(image, x, y, image.getWidth() * 4, image.getHeight() * 4, null);
-            if (!clickH.onOffAction){
+            if (!clickH.onOffAction) {
                 gp.gameState = gp.playState;
-                clickH.onOffAction=true;
+                clickH.onOffAction = true;
                 pokemon.name = null;
                 showPokedexStartText = true;
             }
@@ -353,113 +450,6 @@ public class UI {
         }
     }
 
-    // ===== AREA ICONS =====
-    public void drawAreaIcons() {
-        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 18));
-        g2.setColor(Color.BLACK);
-
-        int x = (gp.player.worldX / gp.tileSize) + 1;
-        int y = (gp.player.worldY / gp.tileSize) + 1;
-
-        long elapsed = System.currentTimeMillis() - areaDisplayStartTime;
-
-        int iconX = 635;
-        int iconY = -200;
-
-        int nameX = 660;
-        int nameY = -130;
-
-        int iconWidth = 345;
-        int iconHeight = 95;
-
-        int newArea = -1;
-
-        if (x > 42 && x <= 71 && y >= 5 && y <= 22) {
-            newArea = 3;
-        } else if (x >= 49 && x <= 55 && y >= 62 && y <= 66) {
-            newArea = 5;
-        } else if (x >= 38 && x < 94 && y >= 83 && y <= 94) {
-            newArea = 7;
-        } else if (x <= 38 && y >= 62 && y <= 91) {
-            newArea = 6;
-        } else if (x >= 27 && x <= 54 && y >= 17 && y <= 65) {
-            newArea = 1;
-        } else if (x >= 40 && x <= 92 && y >= 55 && y <= 73) {
-            newArea = 5;
-        } else if (x <= 27 && y >= 38 && y <= 57) {
-            newArea = 0;
-        } else if (x <= 42 && y < 34) {
-            newArea = 2;
-        } else if (x >= 71 && x <= 92 && y >= 7 && y <= 54) {
-            newArea = 4;
-        }
-
-        // If area changed, reset timer
-        if (newArea != -1 && newArea != currentArea) {
-            currentArea = newArea;
-            areaDisplayStartTime = System.currentTimeMillis();
-            animatedIconY = -200;
-        }
-
-        // Draw only if within 3 seconds
-        if (currentArea != -1 && elapsed <= AREA_DISPLAY_DURATION) {
-            if (animatedIconY < 0) {
-                animatedIconY += 4;
-            }
-            g2.drawImage(areaIcons[currentArea], iconX, animatedIconY, iconWidth, iconHeight, null);
-            g2.drawString(areaNames[currentArea], nameX, animatedIconY + 70);
-        }
-
-        if (elapsed > AREA_DISPLAY_DURATION) {
-            if (animatedIconY > -200) {
-                animatedIconY -= 4;
-            }
-            g2.drawImage(areaIcons[currentArea], iconX, animatedIconY, iconWidth, iconHeight, null);
-            g2.drawString(areaNames[currentArea], nameX, animatedIconY + 70);
-        }
-    }
-
-
-    public void drawTitleScreen() {
-        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 18));
-        g2.setColor(Color.BLACK);
-
-        g2.drawImage(titleScreenBackground, 0, 0, gp.screenWidth, gp.screenHeight, null);
-        g2.drawImage(logo, (gp.screenWidth / 2) - 350, 25, 700, 250, null);
-
-        if (!display) {
-            g2.drawString("Press enter to start", gp.screenWidth / 2 - 150, gp.screenHeight / 2 + 100);
-        }
-
-        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 16));
-        g2.drawString("Made By: Andreas, Jakob, Theis & Bertram", 25, 750);
-        g2.drawImage(opal, gp.screenWidth / 2 - 150, 250, 350, 150, null);
-        g2.drawImage(rowan, 750, 400, 94 * 2, 139 * 2, null);
-        g2.drawImage(lucas, 100, 400, 56 * 2, 123 * 2, null);
-        g2.drawImage(dawn, 200, 450, 63 * 2, 125 * 2, null);
-
-        resetter += 1;
-
-        if (resetter < 75){
-            display = false;
-        }
-         if (resetter > 75){
-            display = true;
-        }
-         if (resetter > 150){
-            resetter = 0;
-        }
-    }
-}
-
-
-
-
-    public int getXForCenteredText(String text) {
-        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
-        return gp.screenWidth / 2 - length / 2;
-    }
-
     public int getXForCenteredTextAt(String text, int targetCenterX) {
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         return targetCenterX - length / 2;
@@ -528,7 +518,7 @@ public class UI {
 
         if (gp.getDrawCount() % 60 < 30) {
             FontMetrics fm = g2.getFontMetrics();
-            int cursorX = xName+(inputBuffer.length()*14) ;
+            int cursorX = xName + (inputBuffer.length() * 14);
             g2.drawLine(cursorX, textY - fm.getHeight() + 5, cursorX, textY + 5);
         }
 
