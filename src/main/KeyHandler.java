@@ -21,6 +21,13 @@ public class KeyHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
 
+        // TITLE SCREEN STATE
+        if (gp.gameState == gp.titleScreenState) {
+            if (code == KeyEvent.VK_ENTER) {
+                gp.gameState = gp.playState;
+            }
+        }
+
         // PLAY STATE
         if (gp.gameState == gp.playState) {
             if (code == KeyEvent.VK_W) {
@@ -46,10 +53,6 @@ public class KeyHandler implements KeyListener {
             }
             if (code == KeyEvent.VK_ESCAPE) {
                 gp.gameState = gp.pauseState;
-            }
-            // TITLE SCREEN STATE
-            else if (code == KeyEvent.VK_T) {
-                gp.gameState = gp.titleScreenState;
             }
         }
 
