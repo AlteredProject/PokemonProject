@@ -176,20 +176,24 @@ public class UI {
         // POKEDEX
         int x = 0;
         int y = 0;
-        drawPokedex(x, y, pokedexGirl, 1);
+        drawPokedex(x, y, pokedexGirl, gp.genderState);
 
         // BUTTONS
         drawButtons();
     }
 
     public void drawPokedex(int x, int y, BufferedImage image, int genderState) {
-        if (genderState == 1) {
-            image = pokedexGirl;
+        try {
+            if (genderState == 1) {
+                image = pokedexGirl;
+            }
+            if (genderState == 2) {
+                image = pokedexBoy;
+            }
+            g2.drawImage(image, x, y, image.getWidth() * 4, image.getHeight() * 4, null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        if (genderState == 2) {
-            image = pokedexBoy;
-        }
-        g2.drawImage(image, x, y, image.getWidth() * 4, image.getHeight() * 4, null);
     }
 
     public void drawButtons() {
