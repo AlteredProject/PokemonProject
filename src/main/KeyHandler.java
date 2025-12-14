@@ -31,6 +31,27 @@ public class KeyHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
 
+        // SEARCH
+        if (gp.gameState == gp.pokedexState && gp.ui.drawingInput) {
+            if (code == KeyEvent.VK_BACK_SPACE) {
+                if (gp.ui.inputBuffer.length() > 0) {
+                    gp.ui.inputBuffer = gp.ui.inputBuffer.substring(0, gp.ui.inputBuffer.length() - 1);
+                }
+            }
+            if (code == KeyEvent.VK_ENTER) {
+                String input = gp.ui.inputBuffer.trim();
+
+                gp.ui.inputBuffer = "";
+                gp.ui.drawingInput = false;
+
+                if (!input.isEmpty()) {
+                    gp.pokedex.search(input);
+                }
+                gp.requestFocusInWindow();
+            }
+            return;
+        }
+
         // TITLE SCREEN STATE
         if (gp.gameState == gp.titleScreenState) {
             if (code == KeyEvent.VK_ENTER) {
@@ -90,27 +111,6 @@ public class KeyHandler implements KeyListener {
             if (code == KeyEvent.VK_ESCAPE) {
                 gp.gameState = gp.playState;
             }
-        }
-
-        // SEARCH
-        if (gp.gameState == gp.pokedexState && gp.ui.drawingInput) {
-            if (code == KeyEvent.VK_BACK_SPACE) {
-                if (gp.ui.inputBuffer.length() > 0) {
-                    gp.ui.inputBuffer = gp.ui.inputBuffer.substring(0, gp.ui.inputBuffer.length() - 1);
-                }
-            }
-            if (code == KeyEvent.VK_ENTER) {
-                String input = gp.ui.inputBuffer.trim();
-
-                gp.ui.inputBuffer = "";
-                gp.ui.drawingInput = false;
-
-                if (!input.isEmpty()) {
-                    gp.pokedex.search(input);
-                }
-                gp.requestFocusInWindow();
-            }
-            return;
         }
     }
 
