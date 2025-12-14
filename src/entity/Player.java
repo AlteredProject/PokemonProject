@@ -12,8 +12,6 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
 
-    int genderState = 2;
-
     int standCounter = 0;
     boolean moving = false;
     boolean sprinting = false;
@@ -50,10 +48,10 @@ public class Player extends Entity {
     }
 
     public void getPlayerImage() {
-        String gender = switch (genderState) {
+        String gender = switch (gp.genderState) {
             case 1 -> "female";
             case 2 -> "male";
-            default -> throw new IllegalStateException("No gender with the genderSate:" + genderState);
+            default -> throw new IllegalStateException("No gender with the genderSate: " + gp.genderState);
         };
 
         String path = "/player/" + gender + "/";
