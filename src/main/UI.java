@@ -57,6 +57,7 @@ public class UI {
         nextButtonPressed = setup("/pokedexSprites/directionRedRight");
         onOffButton = setup("/pokedexSprites/onOffButton");
 
+        titleScreenBackground = setup("/titleScreen/background");
         logo = setup("/titleScreen/logo");
         opal = setup("/titleScreen/opal");
         rowan = setup("/titleScreen/rowan");
@@ -113,6 +114,11 @@ public class UI {
         g2.setFont(pkmnFont);
         g2.setColor(Color.white);
 
+        // TITLE SCREEN STATE
+        if (gp.gameState == gp.titleScreenState) {
+            drawTitleScreen();
+        }
+
         // PLAY STATE
         if (gp.gameState == gp.playState) {
             drawPokedexIcon();
@@ -132,10 +138,6 @@ public class UI {
         // POKEDEX STATE
         if (gp.gameState == gp.pokedexState) {
             drawPokedexScreen();
-        }
-        // TITLE SCREEN STATE
-        if (gp.gameState == gp.titleScreenState) {
-            drawTitleScreen();
         }
 
     }
@@ -317,7 +319,7 @@ public class UI {
         }
 
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 16));
-        g2.drawString("Made By: Andreas, Jacob, Theis & Bertram", 25, 750);
+        g2.drawString("Made By: Andreas, Jakob, Theis & Bertram", 25, 750);
         g2.drawImage(opal, gp.screenWidth / 2 - 150, 250, 350, 150, null);
         g2.drawImage(rowan, 750, 400, 94 * 2, 139 * 2, null);
         g2.drawImage(lucas, 100, 400, 56 * 2, 123 * 2, null);
