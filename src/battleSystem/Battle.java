@@ -107,14 +107,14 @@ public class Battle {
     }
 
     public void update(){
-        // If player run or Pokémon feint, ends battle
-        if (isBattleFinished) {
-            endBattle();
-        }
-
         // Timer to show messages
         if (System.currentTimeMillis() < messageUntil) {
             return;
+        }
+
+        // If player run or Pokémon feint, ends battle
+        if (isBattleFinished) {
+            endBattle();
         }
 
         // Battle flow
@@ -157,21 +157,21 @@ public class Battle {
 
             if(gp.leftClick.mousePressedBox(bagButton.x, bagButton.y, bagButton.width, bagButton.height)){
                 menuState = bagMenu;
-                showMessage("You opened your bag... (not implemented)");
+                showMessage("You opened your bag... (left click)");
                 gp.leftClick.clicked = false;
                 return;
             }
 
             if(gp.leftClick.mousePressedBox(pokeButton.x, pokeButton.y, pokeButton.width, pokeButton.height)){
                 menuState = pokeMenu;
-                showMessage("You look at your Pokemons... (not implemented)");
+                showMessage("You look at your Pokemons... (left click)");
                 gp.leftClick.clicked = false;
                 return;
             }
 
             if(gp.leftClick.mousePressedBox(runButton.x, runButton.y, runButton.width, runButton.height)){
-                menuState = runAway;
                 showMessage("You ran away safely!");
+                menuState = runAway;
                 isBattleFinished = true;
                 gp.leftClick.clicked = false;
                 return;
