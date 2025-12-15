@@ -45,15 +45,8 @@ public class NPC_GymLeader extends Entity {
 
     public void speak() {
         if (dialogues[dialogueIndex] == dialogues[3]) {
-            System.out.println("Battle starts");
-
-            Pokemon playerPokemon = Pokemon.load("25");
-            Pokemon enemyPokemon = Pokemon.load("11");
-
-            gp.battle = new Battle(gp, playerPokemon, enemyPokemon, clickH);
-            gp.gameState = gp.battleState;
-            gp.music.updateMusic();
             gp.player.keyH.ePressed = false;
+            gp.startGymBattle();
         }
         super.speak();
 
