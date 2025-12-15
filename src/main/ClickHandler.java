@@ -28,6 +28,10 @@ public class ClickHandler implements MouseListener {
         this.x = e.getX();
         this.y = e.getY();
         clicked = true;
+
+        if (SwingUtilities.isRightMouseButton(e)){
+            handleRightClick();
+        }
         // Pressed on podexIcon
         if (mousePressedBox(40, 696, 44, 58) && gp.gameState == gp.playState) {
             if (gp.gameState != gp.pokedexState) {
