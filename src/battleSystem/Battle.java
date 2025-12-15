@@ -2,6 +2,7 @@ package battleSystem;
 
 import main.ClickHandler;
 import main.GamePanel;
+import main.Sound;
 import pokedex.EntryStats;
 import pokedex.Pokemon;
 
@@ -15,8 +16,9 @@ import java.util.Random;
 
 public class Battle {
 
-    private GamePanel gp;
+    GamePanel gp;
     ClickHandler clickH;
+    Sound sound;
 
     // === Pictures ===
     private final BufferedImage battleBG, playerGround, enemyGround, myPokemonPic, enemyPokemonPic, playerInfoPanel, enemyInfoPanel, dialogBox;
@@ -55,11 +57,12 @@ public class Battle {
     private int menuState = mainMenu;
 
 
-    public Battle(GamePanel gp, Pokemon playerPokemon, Pokemon enemyPokemon, ClickHandler clickH) {
+    public Battle(GamePanel gp, Pokemon playerPokemon, Pokemon enemyPokemon, ClickHandler clickH, Sound sound) {
         this.gp = gp;
         this.playerPokemon = playerPokemon;
         this.enemyPokemon = enemyPokemon;
         this.clickH = clickH;
+        this.sound = sound;
 
         // === HP INIT ===
         playerMaxHp = getBaseStat(playerPokemon, "hp");
@@ -181,6 +184,7 @@ public class Battle {
 
             if (clickH.consumeClick(runButton.x, runButton.y, runButton.width, runButton.height)) {
                 showMessage("You ran away safely!");
+                sound.playSound(27);
                 menuState = runAway;
                 isBattleFinished = true;
             }
@@ -210,6 +214,7 @@ public class Battle {
                 showMessage("You used a potion and healed " + playerPokemon.getName().toUpperCase() + " for 20HP");
                 playerCurrentHp += potionHealth;
             }
+            sound.playSound(26);
             menuState = mainMenu;
             isPlayerTurn = false;
         }
@@ -221,6 +226,7 @@ public class Battle {
         if (move == null) return;
 
         if (Objects.equals(move.name, "Leer")) {
+            sound.playSound(33);
             leerCounter++;
             showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + "! The enemy " + enemyPokemon.getName().toUpperCase() + "'s defense fell.");
         } else if (move.power <= 0) {
@@ -229,6 +235,19 @@ public class Battle {
             int damage = (int) Math.floor(calculateDamage(move.power) * (1 + (leerCounter * 0.25)));
             enemyCurrentHp = Math.max(0, enemyCurrentHp - damage);
             showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + " and dealt " + damage + "HP!");
+            switch (move.name) {
+                case "Bite" -> sound.playSound(28);
+                case "BubbleBeam" -> sound.playSound(29);
+                case "Ember" -> sound.playSound(30);
+                case "Flame Wheel" -> sound.playSound(31);
+                case "Mach Punch" -> sound.playSound(34);
+                case "Peck" -> sound.playSound(35);
+                case "Pound" -> sound.playSound(36);
+                case "Razor Leaf" -> sound.playSound(37);
+                case "Tackle" -> sound.playSound(38);
+                case "Thunderbolt" -> sound.playSound(39);
+                default -> sound.playSound(32);
+            }
         }
 
         if (enemyCurrentHp <= 0) {
