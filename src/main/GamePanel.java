@@ -38,7 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
     // === SYSTEM ===
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler(this);
-    ClickHandler clickH = new ClickHandler(this);
+    public ClickHandler clickH = new ClickHandler(this);
     Pokemon originalPokemon = new Pokemon();
     Pokedex pokedex = new Pokedex(this, keyH, originalPokemon);
 
@@ -66,9 +66,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int maxWorldRow = 100;
 
     // === SOUND ===
-    public Sound music = new Sound(this,player);
-    public Sound collisionSound = new Sound(this,player);
-    public Sound buttonSound = new Sound(this,player);
+    public Sound music = new Sound(this, player);
+    public Sound collisionSound = new Sound(this, player);
+    public Sound buttonSound = new Sound(this, player);
 
     // === BATTLE SYSTEM ===
     public Battle battle;
@@ -143,14 +143,7 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
 
-            if (keyH.bPressed) {
-                Pokemon playerPokemon = Pokemon.load("25");
-                Pokemon enemyPokemon = Pokemon.load("11");
 
-                battle = new Battle(this, playerPokemon, enemyPokemon, clickH);
-                gameState = battleState;
-                music.updateMusic();
-            }
         }
         if (gameState == pauseState) {
 
@@ -258,15 +251,15 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
 
-        public void playMusic () {
-            music.setFile();
-            music.play();
+    public void playMusic() {
+        music.setFile();
+        music.play();
 
-        }
+    }
 
-        public void stopMusic () {
-            music.stop();
-        }
+    public void stopMusic() {
+        music.stop();
+    }
 
     public long getDrawCount() {
         return drawCount;

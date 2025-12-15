@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
     GamePanel gp;
-    public boolean upPressed, leftPressed, downPressed, rightPressed, shiftPressed, pPressed, enterPressed, ePressed, bPressed, spacePressed;
+    public boolean upPressed, leftPressed, downPressed, rightPressed, shiftPressed, enterPressed, ePressed, bPressed, spacePressed;
     private int count = 0;
     private final int MAX_INPUT_LENGTH = 15;
 
