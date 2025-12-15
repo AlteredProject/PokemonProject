@@ -23,6 +23,7 @@ public class Entity {
     public int solidAreaDefaultX;
     public int solidAreaDefaultY;
     public boolean collisionOn = false;
+    public boolean isGrassOn = false;
 
     String[] dialogues = new String[25];
     int dialogueIndex = 0;

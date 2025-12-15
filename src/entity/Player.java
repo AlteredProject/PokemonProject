@@ -1,23 +1,27 @@
 package entity;
 
+import java.util.Random;
+
+import battleSystem.Battle;
 import main.GamePanel;
 import main.KeyHandler;
+import pokedex.Pokemon;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Player extends Entity {
     KeyHandler keyH;
-
+    private Random random = new Random();
     public final int screenX;
     public final int screenY;
-
+    private boolean hasChecked;
     int standCounter = 0;
-    boolean moving = false;
+    public boolean moving = false;
     boolean sprinting = false;
     int pixelCounter = 0;
 
-    int[] spriteOrder = { 1, 2, 1, 3 };
+    int[] spriteOrder = {1, 2, 1, 3};
     int orderIndex = 0;
 
 
@@ -56,18 +60,18 @@ public class Player extends Entity {
 
         String path = "/player/" + gender + "/";
 
-        up1     = setup(path + "walk_up_1");
-        up2     = setup(path + "walk_up_2");
-        up3     = setup(path + "walk_up_3");
-        left1   = setup(path + "walk_left_1");
-        left2   = setup(path + "walk_left_2");
-        left3   = setup(path + "walk_left_3");
-        down1   = setup(path + "walk_down_1");
-        down2   = setup(path + "walk_down_2");
-        down3   = setup(path + "walk_down_3");
-        right1  = setup(path + "walk_right_1");
-        right2  = setup(path + "walk_right_2");
-        right3  = setup(path + "walk_right_3");
+        up1 = setup(path + "walk_up_1");
+        up2 = setup(path + "walk_up_2");
+        up3 = setup(path + "walk_up_3");
+        left1 = setup(path + "walk_left_1");
+        left2 = setup(path + "walk_left_2");
+        left3 = setup(path + "walk_left_3");
+        down1 = setup(path + "walk_down_1");
+        down2 = setup(path + "walk_down_2");
+        down3 = setup(path + "walk_down_3");
+        right1 = setup(path + "walk_right_1");
+        right2 = setup(path + "walk_right_2");
+        right3 = setup(path + "walk_right_3");
     }
 
     public void update() {
@@ -91,6 +95,7 @@ public class Player extends Entity {
                 sprinting = keyH.shiftPressed;
 
                 moving = true;
+                hasChecked = false;
 
                 // CHECK TILE COLLISION
                 collisionOn = false;
@@ -112,13 +117,14 @@ public class Player extends Entity {
         }
         int move;
         if (moving) {
+            gp.cChecker.checkGrass(this);
             if (sprinting) {
-                move = speed*2;
+                move = speed * 2;
             } else {
                 move = speed;
             }
             if (!collisionOn) {
-                if(pixelCounter + move > gp.tileSize) {
+                if (pixelCounter + move > gp.tileSize) {
                     move = gp.tileSize - pixelCounter;
                 }
                 switch (direction) {
@@ -139,15 +145,30 @@ public class Player extends Entity {
 
             pixelCounter += move;
 
-            if(pixelCounter >= gp.tileSize) {
+            if (pixelCounter >= gp.tileSize) {
                 moving = false;
                 pixelCounter = 0;
+                if (isGrassOn && hasChecked==false) {
+                    int chance = random.nextInt(10);
+                    System.out.println(chance);
+                    if (chance == 1) {
+                        Pokemon playerPokemon = Pokemon.load("25");
+                        Pokemon enemyPokemon = Pokemon.load("11");
+
+                        gp.battle = new Battle(gp, playerPokemon, enemyPokemon, gp.clickH);
+                        gp.gameState = gp.battleState;
+
+                    } else {
+                        hasChecked = true;
+                    }
+                }
+
             }
         }
     }
 
     public void interactNPC(int i) {
-        if (i != 999 ) {
+        if (i != 999) {
             gp.gameState = gp.dialogueState;
             gp.npc[i].speak();
         } else {
@@ -168,7 +189,7 @@ public class Player extends Entity {
             case "down" -> image = down[spriteNum - 1];
             case "right" -> image = right[spriteNum - 1];
         }
-        g2.drawImage(image, screenX, screenY-8, null);
+        g2.drawImage(image, screenX, screenY - 8, null);
     }
 
 

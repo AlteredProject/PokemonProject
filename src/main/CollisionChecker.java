@@ -6,6 +6,7 @@ import entity.Player;
 public class CollisionChecker {
     GamePanel gp;
 
+
     public CollisionChecker(GamePanel gp) {
         this.gp = gp;
     }
@@ -14,7 +15,24 @@ public class CollisionChecker {
         int tileNum = map[col][row];
         return gp.tileM.tile[tileNum].collision;
     }
+    boolean isGrass(int[][] map, int col, int row) {
+        int tileNum = map[col][row];
+        return gp.tileM.tile[tileNum].isGrass;
+    }
+    public void checkGrass(Entity entity){
+        int entityWorldX_Center = entity.worldX + entity.solidArea.x + (entity.solidArea.width / 2);
+        int entityWorldY_Bottom = entity.worldY + entity.solidArea.y + entity.solidArea.height;
 
+        int entityCol = entityWorldX_Center / gp.tileSize;
+        int entityRow = entityWorldY_Bottom / gp.tileSize;
+        boolean walksInGrass = isGrass(gp.tileM.mapTileNumBackground, entityCol, entityRow);
+
+        if(walksInGrass){
+            entity.isGrassOn = true;
+        } else{
+            entity.isGrassOn = false;
+        }
+    }
 
     public void checkTile(Entity entity) {
         int entityLeftWorldX = entity.worldX + entity.solidArea.x;

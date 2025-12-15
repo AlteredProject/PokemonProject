@@ -37,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
     // === SYSTEM ===
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler(this);
-    ClickHandler clickH = new ClickHandler(this);
+    public ClickHandler clickH = new ClickHandler(this);
     Pokemon originalPokemon = new Pokemon();
     Pokedex pokedex = new Pokedex(this, keyH, originalPokemon);
 
@@ -65,9 +65,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int maxWorldRow = 100;
 
     // === SOUND ===
-    public Sound music = new Sound(this,player);
-    public Sound collisionSound = new Sound(this,player);
-    public Sound buttonSound = new Sound(this,player);
+    public Sound music = new Sound(this, player);
+    public Sound collisionSound = new Sound(this, player);
+    public Sound buttonSound = new Sound(this, player);
 
     // === BATTLE SYSTEM ===
     public Battle battle;
@@ -142,13 +142,7 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
 
-            if (keyH.bPressed) {
-                Pokemon playerPokemon = Pokemon.load("25");
-                Pokemon enemyPokemon = Pokemon.load("11");
 
-                this.battle = new Battle(this, playerPokemon, enemyPokemon, clickH);
-                this.gameState = battleState;
-            }
         }
         if (gameState == pauseState) {
 
@@ -247,7 +241,7 @@ public class GamePanel extends JPanel implements Runnable {
 //                        "Draw: %.3f ms | Highest: %.3f ms | Average: %.3f ms%n",
 //                        passedMs, highestMs, averageMs
 //                );
-//                System.out.println("xPos: " + ((player.worldX/64)+1) + " yPos: " + ((player.worldY/64)+1));
+                System.out.println("xPos: " + ((player.worldX/64)+1) + " yPos: " + ((player.worldY/64)+1));
                 frameSincePrint = 0;
             }
         }
@@ -256,15 +250,15 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
 
-        public void playMusic () {
-            music.setFile();
-            music.play();
+    public void playMusic() {
+        music.setFile();
+        music.play();
 
-        }
+    }
 
-        public void stopMusic () {
-            music.stop();
-        }
+    public void stopMusic() {
+        music.stop();
+    }
 
     public long getDrawCount() {
         return drawCount;
