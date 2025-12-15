@@ -2,5 +2,6 @@ package pokedex;
 
 public class Sprites {
 
-    String front_default;
+    public String front_default;
+    public String back_default;
 }

@@ -21,7 +21,7 @@ public class PokemonDescription {
                     .uri(URI.create(url))
                     .GET()
                     .build();
-
+            System.out.println("was here");
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             Gson gson = new Gson();

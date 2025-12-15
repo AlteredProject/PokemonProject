@@ -19,7 +19,6 @@ public class UI {
 
     public Font pkmnFont;
     private boolean showPokedexStartText = true;
-    private int stage = 0;
     public String currentDialogue = "";
     public String inputBuffer = "";
     public boolean drawingInput = false;
@@ -431,7 +430,7 @@ public class UI {
         }
         // Pokemon description
         y += lineSpace;
-        String description = PokemonDescription.getDescription(pokemon.getName());
+        String description = pokemon.getDescription();
         g2.drawString("DESCRIPTION: ", x, y);
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 9));
         y += lineSpace;
