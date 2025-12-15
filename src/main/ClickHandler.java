@@ -77,10 +77,38 @@ public class ClickHandler implements MouseListener {
                 onOff = true;
             }
         }
-        if (mousePressedBox((gp.screenWidth - (254 * 4)) / 2, gp.screenHeight - (46 * 4) - (gp.tileSize / 8), 254 * 4, 46 * 4) && gp.gameState == gp.dialogueState) {
-            gp.keyH.enterPressed = true;
-            gp.buttonSound.playButtonSound();
-            gp.gameState = gp.playState;
+
+        // Pressed on Dialogue
+        if (mousePressedBox((gp.screenWidth - (254 * 4)) / 2, gp.screenHeight - (46 * 4) - (gp.tileSize / 8), 254 * 4, 46 * 4)) {
+            if (gp.gameState == gp.dialogueState) {
+                gp.keyH.enterPressed = true;
+                gp.buttonSound.playButtonSound();
+                gp.gameState = gp.playState;
+            }
+        }
+
+        // Pressed on Turtwig
+        if (mousePressedBox(99, ((gp.screenHeight-200)/2)+4, 192, 192)) {
+            if (gp.gameState == gp.starterChoiceState) {
+                gp.playerPokemon = 387;
+                gp.gameState = gp.playState;
+            }
+        }
+
+        // Pressed on Chimchar
+        if (mousePressedBox(416, ((gp.screenHeight-200)/2)+4, 192, 192)) {
+            if (gp.gameState == gp.starterChoiceState) {
+                gp.playerPokemon = 390;
+                gp.gameState = gp.playState;
+            }
+        }
+
+        // Pressed on Chimchar
+        if (mousePressedBox(733, ((gp.screenHeight-200)/2)+4, 192, 192)) {
+            if (gp.gameState == gp.starterChoiceState) {
+                gp.playerPokemon = 393;
+                gp.gameState = gp.playState;
+            }
         }
     }
 
