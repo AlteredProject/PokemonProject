@@ -34,7 +34,7 @@ public class Pokemon {
     public void pokedexLoad() {
         String expectedPath = cachePath();
 
-        if (PokedexDatabase.getPokemonByName(this) || PokedexDatabase.getPokemonById(this, name)) { // <- Attempts to fill basic data (id, height, weight)
+        if (PokedexDatabase.getPokemonByNameOrId(this)) { // <- Attempts to fill basic data (id, height, weight)
             System.out.println("Data loaded from SQLite cache.");
             path = expectedPath;
             return;

@@ -1,9 +1,12 @@
 package main;
 
+import pokedex.Pokemon;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Objects;
 
 public class ClickHandler implements MouseListener {
     GamePanel gp;
@@ -75,6 +78,9 @@ public class ClickHandler implements MouseListener {
         if (mousePressedBox(605, 220, 66, 60)) {
             if (gp.gameState == gp.pokedexState) {
                 onOff = true;
+                int reset = 0;
+                gp.originalPokemon.setId(reset);
+                gp.pokedex.pokemonSprite = null;
             }
         }
 

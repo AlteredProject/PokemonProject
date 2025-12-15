@@ -107,6 +107,10 @@ public class Pokedex {
     public boolean isSearching() {
         return isSearching;
     }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 }
 
 
