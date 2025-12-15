@@ -87,11 +87,11 @@ public class UI {
     public void getAreaNames() {
         areaNames[0] = "Twinleaf Town";
         areaNames[1] = "Route 201";
-        areaNames[2] = "Lake of Rage";
+        areaNames[2] = "Opal Springs";
         areaNames[3] = "Floaroma Fields";
         areaNames[4] = "Eterna Forest";
         areaNames[5] = "Route 202";
-        areaNames[6] = "Solaceon Town";
+        areaNames[6] = "Celestic Town";
         areaNames[7] = " Mt.Coronet";
     }
 

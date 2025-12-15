@@ -30,7 +30,7 @@ public class NPC_Female6 extends Entity {
     }
 
     public void setDialogue() {
-        dialogues[0] = "Hello and welcome to <CITY NAME>!!!";
+        dialogues[0] = "Hello and welcome to Celestic Town!!!";
         dialogues[1] = "My twin sister and I like to welcome \nevery new person that visits!";
         dialogues[2] = "She's known for being a copycat though. \nSo she'll probably just repeat what i said.";
     }
