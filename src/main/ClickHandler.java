@@ -7,7 +7,8 @@ import java.awt.event.MouseListener;
 
 public class ClickHandler implements MouseListener {
     GamePanel gp;
-    boolean previousButtonPressed, nextButtonPressed, searchButtonPressed, searching, onOff, onOffAction, clicked;
+    boolean previousButtonPressed, nextButtonPressed, searchButtonPressed, searching, onOff, onOffAction;
+    public boolean clicked = false;
     private int x;
     private int y;
 
@@ -26,6 +27,7 @@ public class ClickHandler implements MouseListener {
     public void mousePressed(MouseEvent e) {
         this.x = e.getX();
         this.y = e.getY();
+        clicked = true;
         // Pressed on podexIcon
         if (mousePressedBox(40, 696, 44, 58) && gp.gameState == gp.playState) {
             if (gp.gameState != gp.pokedexState) {
@@ -114,5 +116,16 @@ public class ClickHandler implements MouseListener {
         Rectangle rect = new Rectangle(worldX, worldY, width, height);
         boolean isPointInside = (rect.contains(this.x, this.y));
         return isPointInside;
+    }
+
+    public boolean consumeClick(int rx, int ry, int rw, int rh) {
+        if (!clicked) return false;
+
+        Rectangle r = new Rectangle(rx, ry, rw, rh);
+        if (r.contains(x, y)) {
+            clicked = false;   // 🔥 VERY IMPORTANT
+            return true;
+        }
+        return false;
     }
 }
