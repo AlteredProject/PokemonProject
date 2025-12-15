@@ -45,7 +45,7 @@ public class NPC_Prof extends Entity {
 
     public void speak() {
         if (dialogues[dialogueIndex] == dialogues[10]) {
-            System.out.println("Pick Your Pokemon");
+            gp.gameState = gp.starterChoiceState;
             gp.player.keyH.ePressed = false;
         }
         super.speak();
