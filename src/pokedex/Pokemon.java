@@ -14,7 +14,6 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Arrays;
 
 public class Pokemon {
 
@@ -25,7 +24,7 @@ public class Pokemon {
     private int weight;
     private TypeEntry[] types;
     private Sprites sprites;
-    private EntryStats[] stats;
+    public EntryStats[] stats;
     private String description;
     private boolean validPokemon = true;
     private String pokemonSprite;
@@ -216,8 +215,6 @@ public class Pokemon {
         this.description = description;
     }
 
-}
-
     public static Pokemon load(String pokeName) {
         try {
             String url = "https://pokeapi.co/api/v2/pokemon/" + pokeName.toLowerCase();
@@ -245,10 +242,6 @@ public class Pokemon {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public String getName() {
-        return name;
     }
 }
 
