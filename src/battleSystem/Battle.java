@@ -122,13 +122,13 @@ public class Battle {
 
         // Battle flow
         if (isPlayerTurn){
-            mouseClick();
+            handlePlayerInput();
         } else {
             enemyTurn();
         }
     }
 
-    private void mouseClick(){
+    private void handlePlayerInput(){
 
         int menuRightX = 680;
         int menuRightY = 580;
@@ -151,34 +151,33 @@ public class Battle {
 
         if (menuState == mainMenu){
 
-            if(clickH.mousePressedBox(fightButton.x, fightButton.y, fightButton.width, fightButton.height)){
+            if(clickH.consumeClick(fightButton.x, fightButton.y, fightButton.width, fightButton.height)){
                 menuState = fightMenu;
                 return;
             }
 
-            if(clickH.mousePressedBox(bagButton.x, bagButton.y, bagButton.width, bagButton.height)){
+            if(clickH.consumeClick(bagButton.x, bagButton.y, bagButton.width, bagButton.height)){
                 menuState = bagMenu;
                 showMessage("You opened your bag... (left click)");
                 return;
             }
 
-            if(clickH.mousePressedBox(pokeButton.x, pokeButton.y, pokeButton.width, pokeButton.height)){
+            if(clickH.consumeClick(pokeButton.x, pokeButton.y, pokeButton.width, pokeButton.height)){
                 menuState = pokeMenu;
                 showMessage("You look at your Pokemons... (left click)");
                 return;
             }
 
-            if(clickH.mousePressedBox(runButton.x, runButton.y, runButton.width, runButton.height)){
+            if(clickH.consumeClick(runButton.x, runButton.y, runButton.width, runButton.height)){
                 showMessage("You ran away safely!");
                 menuState = runAway;
                 isBattleFinished = true;
-                return;
             }
         } else if (menuState == fightMenu){
             for (int i = 0; i < moveBoxes.length; i++){
                 Rectangle r = moveBoxes[i];
 
-                if (clickH.mousePressedBox(r.x, r.y, r.width, r.height)){
+                if (clickH.consumeClick(r.x, r.y, r.width, r.height)){
                     if (i < playerMoves.length){
                         usePlayerMove(i);
                         // return to main menu
@@ -189,12 +188,6 @@ public class Battle {
                         return;
                     }
                 }
-
-//                if (clickH.mousePressedBox(menuRightX - 40, menuRightY - 40, (buttonW+gapX) * 2 + 80, (buttonH+gapY) * 2 + 80)) {
-//                    menuState = mainMenu;
-//                    clickH.clicked = false;
-//                    return;
-//                }
             }
         } else {
             showMessage("Menu not implemented");
