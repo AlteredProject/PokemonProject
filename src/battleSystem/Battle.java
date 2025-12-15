@@ -47,7 +47,7 @@ public class Battle {
     // Messages
     private String message = "";
     private long messageUntil = 0;
-    private long messageDuration = 1300; //Millisecond
+    private final long messageDuration = 1300; //Millisecond
 
     private Random rng = new Random();
 
@@ -286,8 +286,6 @@ public class Battle {
         // enemy HP bar in that box
         double eRatio = (double) enemyCurrentHp / Math.max(1, enemyMaxHp);
         int eBarX = 206, eBarY = 232, eBarW = 195, eBarH = 5;
-//        g2.setColor(Color.DARK_GRAY);
-//        g2.fillRect(eBarX, eBarY, eBarW, eBarH);
         g2.setColor(Color.GREEN);
         g2.fillRect(eBarX, eBarY, (int) (eBarW * eRatio), eBarH);
         g2.setColor(Color.BLACK);
@@ -373,15 +371,6 @@ public class Battle {
                 int row = i / 2;
                 int x = menuRightX + col * (buttonW + gapX);
                 int y = menuRightY + row * (buttonH + gapY);
-
-                // hovered effect: if mouse inside, slightly lighter
-//                if (gp.leftClick.mousePressedBox(x, y, buttonW, buttonH)) {
-//                    g2.setColor(new Color(240, 240, 255));
-//                    g2.fillRoundRect(x, y, buttonW, buttonH, 8, 8);
-//                } else {
-//                    g2.setColor(new Color(255, 255, 255));
-//                    g2.fillRoundRect(x, y, buttonW, buttonH, 8, 8);
-//                }
 
                 g2.setColor(Color.BLACK);
                 g2.drawRoundRect(x, y, buttonW, buttonH, 8, 8);
