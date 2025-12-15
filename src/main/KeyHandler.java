@@ -55,7 +55,10 @@ public class KeyHandler implements KeyListener {
         // TITLE SCREEN STATE
         if (gp.gameState == gp.titleScreenState) {
             if (code == KeyEvent.VK_ENTER) {
+                gp.music.stopSound();
                 gp.gameState = gp.playState;
+                gp.music.setFile();
+                gp.music.play();
             }
         }
 
