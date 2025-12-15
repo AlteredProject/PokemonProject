@@ -19,7 +19,6 @@ public class UI {
 
     public Font pkmnFont;
     private boolean showPokedexStartText = true;
-    private int stage = 0;
     public String currentDialogue = "";
     public String inputBuffer = "";
     public boolean drawingInput = false;
