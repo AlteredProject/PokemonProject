@@ -117,7 +117,7 @@ public class Battle {
             String myPokemonURL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/" + gp.playerPokemon + ".png";
             myPokemonPic = ImageIO.read(new URL(myPokemonURL));
             //String enemyPokeURL = enemyPokemon.sprites.front_default;
-            String enemyPokeURL1 = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/11.png";
+            String enemyPokeURL1 = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + enemyPokemon.getId() + ".png";
             enemyPokemonPic = ImageIO.read(new URL(enemyPokeURL1));
         } catch (IOException e) {
             throw new RuntimeException(e);
