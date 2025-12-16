@@ -8,7 +8,7 @@ import entity.Player;
 public class Sound {
     Clip musicClip;
     Clip sfxClip;
-    URL[] soundURL = new URL[41];
+    URL[] soundURL = new URL[42];
     Player player;
     GamePanel gp;
     int musicZone = 0;      // Default twin leaf
@@ -98,7 +98,6 @@ public class Sound {
         soundURL[24] = getClass().getResource("/sound/ChimcharCry .wav");
         soundURL[25] = getClass().getResource("/sound/piplupCry.wav");
 
-
         // Battle sounds
         soundURL[26] = getClass().getResource("/sound/potion.wav");
         soundURL[27] = getClass().getResource("/sound/flee.wav");
@@ -118,6 +117,11 @@ public class Sound {
         soundURL[39] = getClass().getResource("/sound/thunderbolt.wav");
 
         soundURL[40] = getClass().getResource("/sound/titleTheme.wav");
+
+        soundURL[41] = getClass().getResource("/sound/grassStep.wav");
+
+
+
 
 
     }
@@ -143,6 +147,21 @@ public class Sound {
             sfxClip = AudioSystem.getClip();
             sfxClip.open(ais);
             playEffect(-10f);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void playGrassStep() {
+        long now = System.currentTimeMillis();
+        if (now - lastButtonSound < buttonCooldown) return;
+        lastButtonSound = now;
+        try {
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[41]);
+            sfxClip = AudioSystem.getClip();
+            sfxClip.open(ais);
+            playEffect(-1f);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -239,7 +258,6 @@ public class Sound {
                 fadeIn();
             }
         }
-
         // Fade IN
         else if (fadingIn) {
             if (volume < targetVolume) {

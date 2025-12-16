@@ -28,7 +28,9 @@ public class CollisionChecker {
         boolean walksInGrass = isGrass(gp.tileM.mapTileNumBackground, entityCol, entityRow);
 
         if(walksInGrass){
+            gp.grassSound.playGrassStep();
             entity.isGrassOn = true;
+
         } else{
             entity.isGrassOn = false;
         }

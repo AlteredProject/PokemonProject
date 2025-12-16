@@ -70,6 +70,8 @@ public class GamePanel extends JPanel implements Runnable {
     public Sound music = new Sound(this, player);
     public Sound collisionSound = new Sound(this, player);
     public Sound buttonSound = new Sound(this, player);
+    public Sound grassSound = new Sound(this, player);
+
 
     // === BATTLE SYSTEM ===
     public Battle battle;
