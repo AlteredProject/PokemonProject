@@ -271,6 +271,7 @@ public class Battle {
         } else {
             int damage = calculateDamage(move.power);
             playerCurrentHp = Math.max(0, playerCurrentHp - damage);
+            sound.playSound(32);
             showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " used " + move.name + " and dealt " + damage + "HP!");
         }
 
@@ -426,6 +427,7 @@ public class Battle {
 
     public void endBattle() {
         gp.gameState = gp.playState;
+        gp.music.stopMusic();
         gp.battle = null;
     }
 
