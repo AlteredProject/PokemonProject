@@ -230,23 +230,23 @@ public class Battle {
 
         if (menuState == mainMenu) {
 
-            if (clickH.consumeClick(fightButton.x, fightButton.y, fightButton.width, fightButton.height)) {
+            if (clickH.consumeLeftClick(fightButton.x, fightButton.y, fightButton.width, fightButton.height)) {
                 menuState = fightMenu;
                 return;
             }
 
-            if (clickH.consumeClick(bagButton.x, bagButton.y, bagButton.width, bagButton.height)) {
+            if (clickH.consumeLeftClick(bagButton.x, bagButton.y, bagButton.width, bagButton.height)) {
                 menuState = bagMenu;
                 return;
             }
 
-            if (clickH.consumeClick(pokeButton.x, pokeButton.y, pokeButton.width, pokeButton.height)) {
+            if (clickH.consumeLeftClick(pokeButton.x, pokeButton.y, pokeButton.width, pokeButton.height)) {
                 menuState = pokeMenu;
                 showMessage("You look at your Pokemons... (left click)");
                 return;
             }
 
-            if (clickH.consumeClick(runButton.x, runButton.y, runButton.width, runButton.height)) {
+            if (clickH.consumeLeftClick(runButton.x, runButton.y, runButton.width, runButton.height)) {
                 showMessage("You ran away safely!");
                 sound.playSound(27);
                 menuState = runAway;
@@ -256,7 +256,7 @@ public class Battle {
             for (int i = 0; i < moveBoxes.length; i++) {
                 Rectangle r = moveBoxes[i];
 
-                if (clickH.consumeClick(r.x, r.y, r.width, r.height)) {
+                if (clickH.consumeLeftClick(r.x, r.y, r.width, r.height)) {
                     if (i < playerMoves.length) {
                         usePlayerMove(i);
                         // return to main menu
@@ -292,13 +292,13 @@ public class Battle {
         if (Objects.equals(move.name, "Leer")) {
             sound.playSound(33);
             leerCounter++;
-            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + "! The enemy " + enemyPokemon.getName().toUpperCase() + "'s defense fell.");
+            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + "! \nThe enemy " + enemyPokemon.getName().toUpperCase() + "'s defense fell.");
         } else if (move.power <= 0) {
-            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + "! It did no damage...");
+            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + "! \nIt did no damage...");
         } else {
             int damage = (int) Math.floor(calculateDamage(move.power) * (1 + (leerCounter * 0.25)));
             enemyCurrentHp = Math.max(0, enemyCurrentHp - damage);
-            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + " and dealt " + damage + "HP!");
+            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + " \nand dealt " + damage + "HP!");
             switch (move.name) {
                 case "Bite" -> sound.playSound(28);
                 case "BubbleBeam" -> sound.playSound(29);
@@ -333,17 +333,18 @@ public class Battle {
         if (Objects.equals(move.name, "Growl") || Objects.equals(move.name, "Amnesia") || Objects.equals(move.name, "Charm")) {
             sound.playSound(42);
             leerCounter--;
-            showMessage(enemyPokemon.getName().toUpperCase() + " used " + move.name + "! The enemy " + playerPokemon.getName().toUpperCase() + "'s attack fell.");
+            showMessage(enemyPokemon.getName().toUpperCase() + " used " + move.name + "! \nYour " + playerPokemon.getName().toUpperCase() + "'s attack fell.");
         } else if (Objects.equals(move.name, "Harden") || Objects.equals(move.name, "Defense Curl")) {
             sound.playSound(41);
             leerCounter--;
+            showMessage(enemyPokemon.getName().toUpperCase() + " used " + move.name + "! \nIt´s defense rose.");
         } else if (move.power <= 0) {
-            showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " used " + move.name + "! It did no damage...");
+            showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " used " + move.name + "! \nIt did no damage...");
         } else {
             int damage = calculateDamage(move.power);
             playerCurrentHp = Math.max(0, playerCurrentHp - damage);
             sound.playSound(32);
-            showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " used " + move.name + " and dealt " + damage + "HP!");
+            showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " used " + move.name + " \nand dealt " + damage + "HP!");
         }
 
         if (playerCurrentHp <= 0) {
@@ -417,7 +418,8 @@ public class Battle {
 
         // Message Text
         g2.setColor(Color.BLACK);
-        g2.drawString(message, 50, 620);
+
+        gp.ui.drawWrappedText(g2, message, 50, 620, 550, 25);
 
         // MAIN MENU / MOVE UI bottom-right
         int menuRightX = 630;
