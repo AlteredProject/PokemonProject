@@ -266,7 +266,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void startGymBattle() {
         Pokemon playerPokemon = Pokemon.load(String.valueOf(this.playerPokemon));
-        Pokemon enemyPokemon = Pokemon.load("11");
+        Pokemon enemyPokemon = Pokemon.load("448");
 
         battle = new Battle(this, playerPokemon, enemyPokemon, clickH, music);
         gameState = battleState;
@@ -326,6 +326,7 @@ public class GamePanel extends JPanel implements Runnable {
         Pokemon enemyPokemon = Pokemon.load(enemyID);
 
         battle = new Battle(this, playerPokemon, enemyPokemon, clickH, music);
+        clickH.clicked = false;
         gameState = battleState;
         music.updateMusic();
     }
