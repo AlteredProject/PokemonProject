@@ -34,13 +34,21 @@ public class Pokemon {
     public void pokedexLoad() {
         String expectedPath = cachePath();
 
-        if (PokedexDatabase.getPokemonByName(this) || PokedexDatabase.getPokemonById(this, name)) { // <- Attempts to fill basic data (id, height, weight)
+        if (PokedexDatabase.getPokemonByNameOrId(this)) { // <- Attempts to fill basic data (id, height, weight)
             System.out.println("Data loaded from SQLite cache.");
             path = expectedPath;
             return;
         }
         // Hvis ikke i database, hent fra API
+        this.setDescription(PokemonDescription.getDescriptionFromApi(this.name));
         pokedexEntry();
+
+        try {
+            saveToCache();
+        } catch (Exception e) {
+            System.out.println("Could not save to cache");
+        }
+
     }
 
     public void pokedexEntry() {
@@ -78,8 +86,6 @@ public class Pokemon {
             this.types = p.types;
             this.sprites = p.sprites;
             this.stats = p.stats;
-
-            this.printInfoFromApi();
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
@@ -88,12 +94,11 @@ public class Pokemon {
 
     }
 
-    public void printInfoFromApi() throws IOException, InterruptedException {
+    public void saveToCache() throws IOException, InterruptedException {
         pokemonSprite = this.sprites.front_default;
-        this.description = description;
         path = cachePath();
         // Gemmer alt information til databasen, uden PNG
-        PokedexDatabase.insertPokemon(this, description);
+        PokedexDatabase.insertPokemon(this, this.getDescription());
         pngCache();
     }
 
@@ -122,12 +127,12 @@ public class Pokemon {
                 File outputFile = new File(cachePath());
                 boolean success = ImageIO.write(pokemonPng, "png", outputFile);
                 if (success) {
-                    System.out.println("Billedet blev gemt korrekt som: " + outputFile.getAbsolutePath());
+                    System.out.println("Stored correctly as: " + outputFile.getAbsolutePath());
                 } else {
-                    System.err.println("Fejl under skrivning af billedet til fil.");
+                    System.err.println("Error when saving as file");
                 }
             } catch (IOException e) {
-                System.err.println("Der opstod en IO-fejl under hentning/gemning af billedet:");
+                System.err.println("An error occurred when downloading/saving PNG");
                 e.printStackTrace();
             }
         } catch (URISyntaxException e) {

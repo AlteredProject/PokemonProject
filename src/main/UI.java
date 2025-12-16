@@ -207,14 +207,14 @@ public class UI {
         int width = gp.screenWidth;
         int height = 200;
         int x = 0;
-        int y = (gp.screenHeight-height)/2;
-        Color c = new Color(50,50,50,150);
+        int y = (gp.screenHeight - height) / 2;
+        Color c = new Color(50, 50, 50, 150);
         g2.setColor(c);
-        g2.fillRect(x,y,width,height);
+        g2.fillRect(x, y, width, height);
 
-        g2.drawImage(turtwig,99,y+4,null);
-        g2.drawImage(chimchar, 416,y+4,null);
-        g2.drawImage(piplup,733,y+4,null);
+        g2.drawImage(turtwig, 99, y + 4, null);
+        g2.drawImage(chimchar, 416, y + 4, null);
+        g2.drawImage(piplup, 733, y + 4, null);
     }
 
     // ===== PAUSE =====
@@ -226,11 +226,6 @@ public class UI {
         int x = getXForCenteredText(text);
         int y = gp.screenHeight / 2;
         g2.drawString(text, x, y);
-    }
-
-    public int getXForCenteredText(String text) {
-        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
-        return gp.screenWidth / 2 - length / 2;
     }
 
     // ===== DIALOGUE =====
@@ -349,7 +344,6 @@ public class UI {
         if (clickH.searching) {
             drawCustomInputBox();
         }
-
     }
 
     public void drawPokedex(int x, int y, BufferedImage image, int genderState) {
@@ -458,13 +452,15 @@ public class UI {
         }
         // Pokemon description
         y += lineSpace;
+
         String description = pokemon.getDescription();
+        if (pokemon.getDescription() == null) {
+            description = "No description foound for " + pokemon.getName();
+        }
         g2.drawString("DESCRIPTION: ", x, y);
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 9));
         y += lineSpace;
         drawWrappedText(g2, description, x, y, 258, 12);
-
-
     }
 
     public void drawPokemonSprite() {
@@ -475,11 +471,6 @@ public class UI {
         if (pokedex.pokemonSprite != null) {
             g2.drawImage(pokedex.pokemonSprite, pokemonX, pokemonY, pokemonSize * 2, pokemonSize * 2, null);
         }
-    }
-
-    public int getXForCenteredTextAt(String text, int targetCenterX) {
-        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
-        return targetCenterX - length / 2;
     }
 
     public int drawWrappedText(Graphics2D g2, String text, int startX, int startY, int maxLineWidth, int lineSpacing) {
@@ -549,5 +540,15 @@ public class UI {
             g2.drawLine(cursorX, textY - fm.getHeight() + 5, cursorX, textY + 5);
         }
 
+    }
+
+    public int getXForCenteredText(String text) {
+        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+        return gp.screenWidth / 2 - length / 2;
+    }
+
+    public int getXForCenteredTextAt(String text, int targetCenterX) {
+        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+        return targetCenterX - length / 2;
     }
 }

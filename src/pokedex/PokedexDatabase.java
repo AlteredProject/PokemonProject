@@ -5,7 +5,7 @@ import java.sql.*;
 public class PokedexDatabase {
     private static final String DB_URL = "jdbc:sqlite:pokedex.db";
 
-    public static boolean getPokemonByName(Pokemon p) {
+    public static boolean getPokemonByNameOrId(Pokemon p) {
         String sql = "SELECT * FROM pokemon_data WHERE name = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -83,52 +83,4 @@ public class PokedexDatabase {
             System.err.println("Error inserting Pokemon " + p.name + ": " + e.getMessage());
         }
     }
-    public static boolean getPokemonById(Pokemon p, String answer) { // 'answer' is the ID string
-        String sql = "SELECT * FROM pokemon_data WHERE id = ?";
-
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql)){
-
-            pstmt.setString(1, answer);
-            ResultSet rs = pstmt.executeQuery();
-
-            if(rs.next()){
-                // 1. Load Direct Variables (Crucial to set ID and Name)
-                p.setName(rs.getString("name"));
-                p.setId(rs.getInt("id")); // <--- CRUCIAL: Set the ID that was found
-                p.setHeight(rs.getInt("height"));
-                p.setWeight(rs.getInt("weight"));
-                p.setDescription(rs.getString("description"));
-
-                // 2. Load Stats (Reconstruction - Same as getPokemonByName)
-                EntryStats[] stats = new EntryStats[6];
-                stats[0] = EntryStats.createStat("hp", rs.getInt("hp"));
-                stats[1] = EntryStats.createStat("attack", rs.getInt("attack"));
-                stats[2] = EntryStats.createStat("defense", rs.getInt("defense"));
-                stats[3] = EntryStats.createStat("special-attack", rs.getInt("special_attack"));
-                stats[4] = EntryStats.createStat("special-defense", rs.getInt("special_defense"));
-                stats[5] = EntryStats.createStat("speed", rs.getInt("speed"));
-                p.setStats(stats);
-
-                // 3. Load Types (Reconstruction - Same as getPokemonByName)
-                String typesString = rs.getString("types");
-                String[] typeNames = typesString.split(",");
-                TypeEntry[] types = new TypeEntry[typeNames.length];
-                for (int i = 0; i < typeNames.length; i++) {
-                    TypeEntry entry = new TypeEntry();
-                    entry.type = new TypeInfo();
-                    entry.type.name = typeNames[i].trim();
-                    types[i] = entry;
-                }
-                p.setTypes(types);
-
-                return true;
-            }
-            return false;
-        } catch (SQLException e){
-            System.err.println("Error reading Pokemon " + p.getName() + ": " + e.getMessage());
-            return false;
-        }
-    }
-
 }
