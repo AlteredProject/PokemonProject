@@ -116,11 +116,9 @@ public class Sound {
         soundURL[38] = getClass().getResource("/sound/tackle.wav");
         soundURL[39] = getClass().getResource("/sound/thunderbolt.wav");
         soundURL[40] = getClass().getResource("/sound/titleTheme.wav");
-
         soundURL[41] = getClass().getResource("/sound/grassStep.wav");
-        soundURL[42] = getClass().getResource("sound/statFell.wav");
-        soundURL[43] = getClass().getResource("sound/Harden.wav");
-
+        soundURL[42] = getClass().getResource("/sound/statFell.wav");
+        soundURL[43] = getClass().getResource("/sound/Harden.wav");
     }
 
     public void setFile() {
