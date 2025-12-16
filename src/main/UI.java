@@ -593,7 +593,6 @@ public class UI {
     }
 
     public void updateGrassFade() {
-        System.out.println(this.grassFadeCounter);
         if (enterWild) {
             this.grassFadeCounter++;
         }
