@@ -23,10 +23,12 @@ public class UI {
     public String currentDialogue = "";
     public String inputBuffer = "";
     public boolean drawingInput = false;
+    private int grassFadeCounter;
 
     // === Area Icons ===
     Image[] areaIcons = new Image[10];
     String[] areaNames = new String[8];
+    Image[] wildIntro = new Image[7];
     private int currentArea = -1;
     private long areaDisplayStartTime = 0;
     private static final long AREA_DISPLAY_DURATION = 3000; // 3 seconds
@@ -89,6 +91,29 @@ public class UI {
         areaIcons[5] = setup("/ui/zoneOcean");
         areaIcons[6] = setup("/ui/zoneSmallCity");
         areaIcons[7] = setup("/ui/zoneMountain");
+
+        wildIntro[1] = setup("/battleIntro/wildIntro1.png");
+        wildIntro[1] = uTool.scaleImage((BufferedImage) wildIntro[1], 1024, 768);
+        wildIntro[2] = setup("/battleIntro/wildIntro2.png");
+        wildIntro[2] = uTool.scaleImage((BufferedImage) wildIntro[2], 1024, 768);
+        wildIntro[3] = setup("/battleIntro/wildIntro3.png");
+        wildIntro[3] = uTool.scaleImage((BufferedImage) wildIntro[3], 1024, 768);
+        wildIntro[4] = setup("/battleIntro/wildIntro4.png");
+        wildIntro[4] = uTool.scaleImage((BufferedImage) wildIntro[4], 1024, 768);
+        wildIntro[5] = setup("/battleIntro/wildIntro5.png");
+        wildIntro[5] = uTool.scaleImage((BufferedImage) wildIntro[5], 1024, 768);
+        wildIntro[6] = setup("/battleIntro/wildIntro6.png");
+        wildIntro[6] = uTool.scaleImage((BufferedImage) wildIntro[6], 1024, 768);
+        wildIntro[7] = setup("/battleIntro/wildIntro7.png");
+        wildIntro[7] = uTool.scaleImage((BufferedImage) wildIntro[7], 1024, 768);
+    }
+    public void drawBattleIntro() {
+        for (Image image : wildIntro) {
+            if (grassFadeCounter == 60) {
+                g2.drawImage(image, 0, 0, 1024, 768, null);
+                grassFadeCounter = 0;
+            }
+        }
     }
 
     public void getAreaNames() {
@@ -551,4 +576,8 @@ public class UI {
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         return targetCenterX - length / 2;
     }
+    public void updateGrassFade(){
+        grassFadeCounter++;
+    }
+
 }

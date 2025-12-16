@@ -138,6 +138,7 @@ public class GamePanel extends JPanel implements Runnable {
             player.update();
             music.updateMusic();
             music.updateFade();
+            ui.updateGrassFade();
             for (int i = 0; i < npc.length; i++) {
                 if (npc[i] != null) {
                     npc[i].update();
@@ -153,6 +154,7 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == battleState) {
             // Battle screen
             if (battle != null) {
+                ui.drawBattleIntro();
                 battle.update();
             }
 
