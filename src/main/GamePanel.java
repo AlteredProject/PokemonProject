@@ -140,6 +140,14 @@ public class GamePanel extends JPanel implements Runnable {
             player.update();
             music.updateMusic();
             music.updateFade();
+            ui.updateGrassFade();
+             if(ui.enterWild){
+                 if (ui.getGrassFadeCounter()>=ui.grassFadeCounterMax){
+                     ui.enterWild = false;
+                     ui.setGrassFadeCounter(0);
+                     startWildBattle();
+                 }
+             }
             for (int i = 0; i < npc.length; i++) {
                 if (npc[i] != null) {
                     npc[i].update();
@@ -276,7 +284,6 @@ public class GamePanel extends JPanel implements Runnable {
     public void startWildBattle() {
         Pokemon playerPokemon = Pokemon.load(String.valueOf(this.playerPokemon));
         Pokemon enemyPokemon = Pokemon.load("11");
-
         battle = new Battle(this, playerPokemon, enemyPokemon, clickH, music);
         gameState = battleState;
         music.updateMusic();

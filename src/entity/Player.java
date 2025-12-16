@@ -18,8 +18,8 @@ public class Player extends Entity {
     public boolean moving = false;
     boolean sprinting = false;
     int pixelCounter = 0;
-
-    int[] spriteOrder = {2, 1, 3, 1};
+    public int chance = 0;
+    int[] spriteOrder = {1, 2, 1, 3};
     int orderIndex = 0;
 
 
@@ -146,10 +146,14 @@ public class Player extends Entity {
             if (pixelCounter >= gp.tileSize) {
                 moving = false;
                 pixelCounter = 0;
-                if (isGrassOn && hasChecked==false) {
-                    int chance = random.nextInt(10);
+                if (isGrassOn && hasChecked == false) {
+                    chance = random.nextInt(10);
                     if (chance == 1) {
-                        gp.startWildBattle();
+                        gp.ui.drawBattleIntro();
+                        if (gp.ui.getGrassFadeCounter() > 100) {
+                            gp.startWildBattle();
+                            gp.ui.setGrassFadeCounter(0);
+                        }
                     } else {
                         hasChecked = true;
                     }
