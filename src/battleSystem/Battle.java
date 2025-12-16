@@ -330,11 +330,19 @@ public class Battle {
         }
 
         Moves move = enemyMoves[rng.nextInt(enemyMoves.length)];
-        if (move.power <= 0) {
+        if (Objects.equals(move.name, "Growl") || Objects.equals(move.name, "Amnesia") || Objects.equals(move.name, "Charm")) {
+            sound.playSound(42);
+            leerCounter--;
+            showMessage(enemyPokemon.getName().toUpperCase() + " used " + move.name + "! The enemy " + playerPokemon.getName().toUpperCase() + "'s attack fell.");
+        } else if (Objects.equals(move.name, "Harden") || Objects.equals(move.name, "Defense Curl")) {
+            sound.playSound(41);
+            leerCounter--;
+        } else if (move.power <= 0) {
             showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " used " + move.name + "! It did no damage...");
         } else {
             int damage = calculateDamage(move.power);
             playerCurrentHp = Math.max(0, playerCurrentHp - damage);
+            sound.playSound(32);
             showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " used " + move.name + " and dealt " + damage + "HP!");
         }
 
@@ -343,7 +351,9 @@ public class Battle {
             isBattleFinished = true;
             return;
         }
-
+        if (leerCounter == -4) {
+            leerCounter = -3;
+        }
         isPlayerTurn = true;
     }
 
