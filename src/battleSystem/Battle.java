@@ -97,12 +97,75 @@ public class Battle {
         }
 
 
-        enemyMoves = new Moves[]{
-                new Moves("Poison Sting", 15),
-                new Moves("Fury Attack", 25),
-                new Moves("Twineedle", 40),
-                new Moves("Bug Bite", 60)
-        };
+
+        enemyMoves = new Moves[4];
+        // ROUTE 201
+        if (enemyPokemon.getId() == 396){
+            enemyMoves[0] = new Moves("Peck", 35);
+            enemyMoves[1] = new Moves("Quick Attack", 40);
+            enemyMoves[2] = new Moves("Wing Attack", 60);
+            enemyMoves[3] = new Moves("Growl", 0);
+        } else if (enemyPokemon.getId() == 399){
+            enemyMoves[0] = new Moves("Tackle", 35);
+            enemyMoves[1] = new Moves("Headbutt", 70);
+            enemyMoves[2] = new Moves("Superpower", 120);
+            enemyMoves[3] = new Moves("Growl", 0);
+        // OPAL SPRINGS
+        } else if (enemyPokemon.getId() == 129) {
+            enemyMoves[0] = new Moves("Splash", 0);
+            enemyMoves[1] = new Moves("Splash", 0);
+            enemyMoves[2] = new Moves("Splash", 0);
+            enemyMoves[3] = new Moves("Hydro Pump", 120);
+        } else if (enemyPokemon.getId() == 54) {
+            enemyMoves[0] = new Moves("Water Gun", 40);
+            enemyMoves[1] = new Moves("Water Pulse", 60);
+            enemyMoves[2] = new Moves("Scratch", 40);
+            enemyMoves[3] = new Moves("Amnesia", 0);
+        // ETERNA FOREST
+        } else if (enemyPokemon.getId() == 315) {
+            enemyMoves[0] = new Moves("Razor Leaf", 55);
+            enemyMoves[1] = new Moves("Magical Lead", 60);
+            enemyMoves[2] = new Moves("Pin Missile", 25);
+            enemyMoves[3] = new Moves("Charm", 0);
+        } else if (enemyPokemon.getId() == 265) {
+            enemyMoves[0] = new Moves("Tackle", 35);
+            enemyMoves[1] = new Moves("Poison Sting", 15);
+            enemyMoves[2] = new Moves("Harden", 0);
+            enemyMoves[3] = new Moves("Growl", 0);
+        // ROUTE 202
+        } else if (enemyPokemon.getId() == 185) {
+            enemyMoves[0] = new Moves("Rock Throw", 50);
+            enemyMoves[1] = new Moves("Faint Attack", 60);
+            enemyMoves[2] = new Moves("Rock Smash", 40);
+            enemyMoves[3] = new Moves("Charm", 0);
+        } else if (enemyPokemon.getId() == 299) {
+            enemyMoves[0] = new Moves("Tackle", 35);
+            enemyMoves[1] = new Moves("Rock Throw", 50);
+            enemyMoves[2] = new Moves("Rock Slide", 75);
+            enemyMoves[3] = new Moves("Harden", 0);
+        // VALLEY
+        } else if (enemyPokemon.getId() == 74) {
+            enemyMoves[0] = new Moves("Rock Throw", 50);
+            enemyMoves[1] = new Moves("Rollout", 30);
+            enemyMoves[2] = new Moves("Rock Blast", 25);
+            enemyMoves[3] = new Moves("Defense Curl", 0);
+        } else if (enemyPokemon.getId() == 436) {
+            enemyMoves[0] = new Moves("Tackle", 35);
+            enemyMoves[1] = new Moves("Confusion", 50);
+            enemyMoves[2] = new Moves("Extrasensory", 100);
+            enemyMoves[3] = new Moves("Harden", 0);
+            // GYM LEADER
+        } else if (enemyPokemon.getId() == 448) {
+            enemyMoves[0] = new Moves("Force Palm", 60);
+            enemyMoves[1] = new Moves("Aura Sphere", 90);
+            enemyMoves[2] = new Moves("Close Combat", 120);
+            enemyMoves[3] = new Moves("Dragon Pulse", 90);
+        } else {
+            enemyMoves[0] = new Moves("Tackle", 40);
+            enemyMoves[1] = new Moves("Bite", 60);
+            enemyMoves[2] = new Moves("Thunderbolt", 90);
+            enemyMoves[3] = new Moves("Growl", 0);
+        }
 
         // === LOAD GRAPHICS ===
         try {
@@ -139,6 +202,7 @@ public class Battle {
         if (isPlayerTurn) {
             handlePlayerInput();
         } else {
+            clickH.clicked = false;
             enemyTurn();
         }
     }
@@ -166,23 +230,23 @@ public class Battle {
 
         if (menuState == mainMenu) {
 
-            if (clickH.consumeClick(fightButton.x, fightButton.y, fightButton.width, fightButton.height)) {
+            if (clickH.consumeLeftClick(fightButton.x, fightButton.y, fightButton.width, fightButton.height)) {
                 menuState = fightMenu;
                 return;
             }
 
-            if (clickH.consumeClick(bagButton.x, bagButton.y, bagButton.width, bagButton.height)) {
+            if (clickH.consumeLeftClick(bagButton.x, bagButton.y, bagButton.width, bagButton.height)) {
                 menuState = bagMenu;
                 return;
             }
 
-            if (clickH.consumeClick(pokeButton.x, pokeButton.y, pokeButton.width, pokeButton.height)) {
+            if (clickH.consumeLeftClick(pokeButton.x, pokeButton.y, pokeButton.width, pokeButton.height)) {
                 menuState = pokeMenu;
                 showMessage("You look at your Pokemons... (left click)");
                 return;
             }
 
-            if (clickH.consumeClick(runButton.x, runButton.y, runButton.width, runButton.height)) {
+            if (clickH.consumeLeftClick(runButton.x, runButton.y, runButton.width, runButton.height)) {
                 showMessage("You ran away safely!");
                 sound.playSound(27);
                 menuState = runAway;
@@ -192,7 +256,7 @@ public class Battle {
             for (int i = 0; i < moveBoxes.length; i++) {
                 Rectangle r = moveBoxes[i];
 
-                if (clickH.consumeClick(r.x, r.y, r.width, r.height)) {
+                if (clickH.consumeLeftClick(r.x, r.y, r.width, r.height)) {
                     if (i < playerMoves.length) {
                         usePlayerMove(i);
                         // return to main menu
@@ -228,13 +292,13 @@ public class Battle {
         if (Objects.equals(move.name, "Leer")) {
             sound.playSound(33);
             leerCounter++;
-            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + "! The enemy " + enemyPokemon.getName().toUpperCase() + "'s defense fell.");
+            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + "! \nThe enemy " + enemyPokemon.getName().toUpperCase() + "'s defense fell.");
         } else if (move.power <= 0) {
-            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + "! It did no damage...");
+            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + "! \nIt did no damage...");
         } else {
             int damage = (int) Math.floor(calculateDamage(move.power) * (1 + (leerCounter * 0.25)));
             enemyCurrentHp = Math.max(0, enemyCurrentHp - damage);
-            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + " and dealt " + damage + "HP!");
+            showMessage(playerPokemon.getName().toUpperCase() + " used " + move.name + " \nand dealt " + damage + "HP!");
             switch (move.name) {
                 case "Bite" -> sound.playSound(28);
                 case "BubbleBeam" -> sound.playSound(29);
@@ -266,13 +330,21 @@ public class Battle {
         }
 
         Moves move = enemyMoves[rng.nextInt(enemyMoves.length)];
-        if (move.power <= 0) {
-            showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " used " + move.name + "! It did no damage...");
+        if (Objects.equals(move.name, "Growl") || Objects.equals(move.name, "Amnesia") || Objects.equals(move.name, "Charm")) {
+            sound.playSound(42);
+            leerCounter--;
+            showMessage(enemyPokemon.getName().toUpperCase() + " used " + move.name + "! \nYour " + playerPokemon.getName().toUpperCase() + "'s attack fell.");
+        } else if (Objects.equals(move.name, "Harden") || Objects.equals(move.name, "Defense Curl")) {
+            sound.playSound(41);
+            leerCounter--;
+            showMessage(enemyPokemon.getName().toUpperCase() + " used " + move.name + "! \nIt´s defense rose.");
+        } else if (move.power <= 0) {
+            showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " used " + move.name + "! \nIt did no damage...");
         } else {
             int damage = calculateDamage(move.power);
             playerCurrentHp = Math.max(0, playerCurrentHp - damage);
             sound.playSound(32);
-            showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " used " + move.name + " and dealt " + damage + "HP!");
+            showMessage("Enemy " + enemyPokemon.getName().toUpperCase() + " used " + move.name + " \nand dealt " + damage + "HP!");
         }
 
         if (playerCurrentHp <= 0) {
@@ -280,7 +352,9 @@ public class Battle {
             isBattleFinished = true;
             return;
         }
-
+        if (leerCounter == -4) {
+            leerCounter = -3;
+        }
         isPlayerTurn = true;
     }
 
@@ -301,9 +375,12 @@ public class Battle {
         g2.drawImage(enemyGround, 700, 280, 300, 80, null);
 
         // Place Pokémon
-        g2.drawImage(myPokemonPic, 50, 250, 500, 500, null);
-        g2.drawImage(enemyPokemonPic, 720, 160, 250, 250, null);
-
+        drawImageBottomCenterScaled(g2, myPokemonPic, 275, 730, 500, 500);
+        if (enemyPokemon.getId() == 448) {
+            drawImageBottomCenterScaled(g2, enemyPokemonPic, 845, 375, 250, 250);
+        } else{
+            drawImageBottomCenterScaled(g2, enemyPokemonPic, 845, 400, 250, 250);
+        }
         // Enemy info box (top-left)
         g2.drawImage(enemyInfoPanel, 0, 160, 500, 100, null);
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 20));
@@ -341,7 +418,8 @@ public class Battle {
 
         // Message Text
         g2.setColor(Color.BLACK);
-        g2.drawString(message, 50, 620);
+
+        gp.ui.drawWrappedText(g2, message, 50, 620, 550, 25);
 
         // MAIN MENU / MOVE UI bottom-right
         int menuRightX = 630;
@@ -438,5 +516,14 @@ public class Battle {
     public void showMessage(String text) {
         this.message = text;
         this.messageUntil = System.currentTimeMillis() + messageDuration;
+    }
+
+    private void drawImageBottomCenterScaled(Graphics2D g2, BufferedImage img, int centerX, int bottomY, int width, int height) {
+        if (img == null) return;
+
+        int x = centerX - width / 2;
+        int y = bottomY - height;
+
+        g2.drawImage(img, x, y, width, height, null);
     }
 }

@@ -10,6 +10,7 @@ import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -45,6 +46,7 @@ public class GamePanel extends JPanel implements Runnable {
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this, clickH);
     public UI ui = new UI(this, clickH, originalPokemon, pokedex);
+    Random rng = new Random();
     Thread gameThread;
 
     // == ENTITY & OBJECT ===
@@ -274,7 +276,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void startGymBattle() {
         Pokemon playerPokemon = Pokemon.load(String.valueOf(this.playerPokemon));
-        Pokemon enemyPokemon = Pokemon.load("11");
+        Pokemon enemyPokemon = Pokemon.load("448");
 
         battle = new Battle(this, playerPokemon, enemyPokemon, clickH, music);
         gameState = battleState;
@@ -283,8 +285,58 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void startWildBattle() {
         Pokemon playerPokemon = Pokemon.load(String.valueOf(this.playerPokemon));
-        Pokemon enemyPokemon = Pokemon.load("11");
+        int poke = rng.nextInt(2);
+        String enemyID;
+        int x = (player.worldX / tileSize) + 1;
+        int y = (player.worldY / tileSize) + 1;
+
+        if (x >= 33 && y <= 60 && x <= 54 && y >= 20){
+            // 201
+            if (poke == 1){
+            enemyID = "396";
+            } else{
+                enemyID = "399";
+            }
+        } else if (x >= 0 && y <= 20 && x <= 41 && y >= 0){
+            // Opal Springs
+            if (poke == 1){
+                enemyID = "129";
+            } else{
+                enemyID = "54";
+            }
+        }else if (x >= 71 && y <= 55 && x <= 999 && y >= 0){
+            // Forest
+            if (poke == 1){
+                enemyID = "315";
+            } else{
+                enemyID = "265";
+            }
+        }else if (x >= 40 && y <= 73 && x <= 999 && y >= 56){
+            // 202
+            if (poke == 1){
+                enemyID = "185";
+            } else{
+                enemyID = "299";
+            }
+        }else if (x >= 43 && y <= 999 && x <= 999 && y >= 80){
+            // Valley
+            if (poke == 1){
+                enemyID = "74";
+            } else{
+                enemyID = "436";
+            }
+        } else {
+            if (poke == 1){
+                enemyID = "25";
+            } else{
+                enemyID = "69";
+            }
+        }
+
+        Pokemon enemyPokemon = Pokemon.load(enemyID);
+
         battle = new Battle(this, playerPokemon, enemyPokemon, clickH, music);
+        clickH.clicked = false;
         gameState = battleState;
         music.updateMusic();
     }

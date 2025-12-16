@@ -12,8 +12,10 @@ public class ClickHandler implements MouseListener {
     GamePanel gp;
     boolean previousButtonPressed, nextButtonPressed, searchButtonPressed, searching, onOff, onOffAction;
     public boolean clicked = false;
-    private int x;
-    private int y;
+    public boolean leftClicked = false;
+    public boolean rightClicked = false;
+    private int mouseX;
+    private int mouseY;
 
     public ClickHandler(GamePanel gp) {
         this.gp = gp;
@@ -25,16 +27,24 @@ public class ClickHandler implements MouseListener {
 
     }
 
-
     @Override
     public void mousePressed(MouseEvent e) {
-        this.x = e.getX();
-        this.y = e.getY();
-        clicked = true;
+        mouseX = e.getX();
+        mouseY = e.getY();
 
-        if (SwingUtilities.isRightMouseButton(e)){
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            leftClicked = true;
+            handleLeftClick();
+        }
+
+        if (SwingUtilities.isRightMouseButton(e)) {
+            rightClicked = true;
             handleRightClick();
         }
+    }
+
+    public void handleLeftClick() {
+
         // Pressed on podexIcon
         if (mousePressedBox(40, 696, 44, 58) && gp.gameState == gp.playState) {
             if (gp.gameState != gp.pokedexState) {
@@ -155,18 +165,23 @@ public class ClickHandler implements MouseListener {
 
     public boolean mousePressedBox(int worldX, int worldY, int width, int height) {
         Rectangle rect = new Rectangle(worldX, worldY, width, height);
-        boolean isPointInside = (rect.contains(this.x, this.y));
-        return isPointInside;
+        return rect.contains(mouseX, mouseY);
     }
 
-    public boolean consumeClick(int rx, int ry, int rw, int rh) {
-        if (!clicked) return false;
+    public boolean consumeLeftClick(int x, int y, int w, int h) {
+        if (!leftClicked) return false;
 
-        Rectangle r = new Rectangle(rx, ry, rw, rh);
-        if (r.contains(x, y)) {
-            clicked = false;   // 🔥 VERY IMPORTANT
+        Rectangle r = new Rectangle(x, y, w, h);
+        if (r.contains(mouseX, mouseY)) {
+            leftClicked = false;
             return true;
         }
         return false;
+    }
+
+    public boolean consumeRightClick() {
+        if (!rightClicked) return false;
+        rightClicked = false;
+        return true;
     }
 }

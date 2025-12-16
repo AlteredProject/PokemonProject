@@ -8,7 +8,7 @@ import entity.Player;
 public class Sound {
     Clip musicClip;
     Clip sfxClip;
-    URL[] soundURL = new URL[42];
+    URL[] soundURL = new URL[44];
     Player player;
     GamePanel gp;
     int musicZone = 0;      // Default twin leaf
@@ -115,14 +115,11 @@ public class Sound {
         soundURL[37] = getClass().getResource("/sound/razorLeaf.wav");
         soundURL[38] = getClass().getResource("/sound/tackle.wav");
         soundURL[39] = getClass().getResource("/sound/thunderbolt.wav");
-
         soundURL[40] = getClass().getResource("/sound/titleTheme.wav");
 
         soundURL[41] = getClass().getResource("/sound/grassStep.wav");
-
-
-
-
+        soundURL[42] = getClass().getResource("sound/statFell.wav");
+        soundURL[43] = getClass().getResource("sound/Harden.wav");
 
     }
 
@@ -258,6 +255,7 @@ public class Sound {
                 fadeIn();
             }
         }
+
         // Fade IN
         else if (fadingIn) {
             if (volume < targetVolume) {
