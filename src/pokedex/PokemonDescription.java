@@ -1,6 +1,7 @@
 package pokedex;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -25,7 +26,13 @@ public class PokemonDescription {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             Gson gson = new Gson();
-            PokemonSpecies species = gson.fromJson(response.body(), PokemonSpecies.class);
+            PokemonSpecies species = null;
+            try {
+                species = gson.fromJson(response.body(), PokemonSpecies.class);
+            } catch (JsonSyntaxException e) {
+                System.out.println("No data found");
+                return null;
+            }
             for (FlavorTextEntry entry : species.flavor_text_entries) {
                 if (entry.language.name.equals("en")) {
                     return entry.flavor_text.replace("\n", " ");
